@@ -19,7 +19,7 @@ $.ajax({
 // )
 
 // Hover highlight
-$('.hljs-attr').click(function () {
+$('.hljs-attr').on('click', function () {
   $('.hljs-attr').removeClass('is-selected');
   $(undefined).addClass('is-selected');
 });
