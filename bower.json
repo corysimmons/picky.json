@@ -1,0 +1,7 @@
+{
+  "name": "picky",
+  "dependencies": {
+    "jquery": "^2.2.0",
+    "clipboard": "^1.5.5"
+  }
+}

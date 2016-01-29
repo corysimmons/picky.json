@@ -1,2 +1,8 @@
 # picky.json
-:skull: Browse and click JSON keys, get the selector.
+
+#### Installation
+- `npm i`
+- `bower i`
+
+#### Develop
+`npm start`

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Picky</title>
+  <link rel="stylesheet" href="assets/dist/css/style.css">
+</head>
+<body>
+
+  <header>
+    <h1>
+      <a href="http://github.com/corysimmons/picky.json" target="_blank">picky.json</a>
+    </h1>
+    <button class="btn-example">Load Example JSON</button>
+  </header>
+
+  <main>
+    <textarea placeholder="Enter your JSON"></textarea>
+    <div class="code-wrap">
+      <div class="grab">
+        <input id="picked" type="text" placeholder="Pick a key from your JSON" disabled>
+        <button class="btn-clipboard" data-clipboard-target="#picked">Copy</button>
+      </div>
+      <pre><code class="json"></code></pre>
+    </div>
+  </main>
+
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+  <script src="bower_components/clipboard/dist/clipboard.min.js"></script>
+  <script src="assets/dist/js/picky.js"></script>
+</body>
+</html>

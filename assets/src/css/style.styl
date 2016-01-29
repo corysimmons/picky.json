@@ -1,0 +1,147 @@
+@import 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css'
+@import 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/github-gist.min.css'
+@import url(https://fonts.googleapis.com/css?family=Roboto:100)
+@import url(https://fonts.googleapis.com/css?family=Roboto\+Mono:300,500)
+
+*
+  margin: 0
+  padding: 0
+  box-sizing: border-box
+
+$tablet = 1000px
+
+cf()
+  &:after
+    content: ''
+    display: table
+    clear: both
+
+trans($speed = 200ms)
+  transition: all $speed ease
+
+body
+  font-family: 'Roboto', serif
+  line-height: 1.5
+  color: lighten(black, 20%)
+
+header
+  cf()
+  background: linear-gradient(to left, #7b4397, #dc2430)
+  color: white
+  padding: 0 15px
+  height: 60px
+  @media (min-width: $tablet)
+    padding: 0 20px
+    height: 75px
+
+h1
+  font-weight: 100
+  font-size: 1rem
+  float: left
+  line-height: 60px
+  margin: 0
+  @media (min-width: $tablet)
+    font-size: 1.5rem
+    line-height: 75px
+  a
+    color: white
+    text-decoration: none
+
+.btn-example
+  cursor: pointer
+  float: right
+  padding: 5px 10px
+  border-radius: 3px
+  background: none
+  font-size: .75rem
+  trans()
+  border: 1px solid rgba(white, 50%)
+  color: white
+  outline: 0
+  margin-top: 18px
+  &:hover
+    background: rgba(white, 5%)
+  &:active
+    background: rgba(#dc2430, 5%)
+  @media (min-width: $tablet)
+    margin-top: 26px
+
+code
+  font-family: 'Roboto Mono', serif
+  font-weight: 100
+  font-size: .5rem
+
+main
+  cf()
+  height: calc(100vh - 60px)
+  overflow: hidden
+  @media (min-width: $tablet)
+    height: calc(100vh - 75px)
+
+textarea
+  border: 0
+  border-bottom: 1px solid darken(white, 10%)
+  width: 100%
+  height: 20vh
+  outline: 0
+  resize: none
+  padding: 15px
+  font-size: 1rem
+  @media (min-width: $tablet)
+    border-bottom: 0
+    border-right: 1px solid darken(white, 10%)
+    float: left
+    width: 50%
+    height: calc(100vh - 75px)
+
+.code-wrap
+  height: calc(100vh - 20vh - 60px)
+  margin-top: -7px
+  @media (min-width: $tablet)
+    margin-top: 0
+    float: left
+    width: 50%
+
+pre
+  padding: 10px
+  overflow: scroll
+  height: calc(100vh - 60px - 20vh - 50px)
+  @media (min-width: $tablet)
+    height: calc(100vh - 75px - 50px)
+
+.grab
+  height: 50px
+  position: relative
+  input
+    width: 100%
+    border: 0
+    border-bottom: 1px solid darken(white, 10%)
+    outline: 0
+    padding: 0 10px
+    font-size: 1rem
+    height: 50px
+    line-height: 50px
+  .btn-clipboard
+    position: absolute
+    right: 0
+    top: 0
+    bottom: 0
+    margin: 0
+    padding: 0 30px
+    border: 1px solid darken(white, 10%)
+    border-top: 0
+    border-right: 0
+    background: darken(white, 5%)
+    color: darken(white, 40%)
+    text-transform: uppercase
+    letter-spacing: .25em
+    trans()
+    outline: none
+    cursor: pointer
+    &:hover
+      background: darken(white, 7%)
+    &:active
+      background: darken(white, 10%)
+
+.is-selected
+  background: lighten(yellow, 10%)
