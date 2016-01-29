@@ -171,7 +171,16 @@ pre {
 .grab .btn-clipboard:active {
   background: #e6e6e6;
 }
-.is-selected {
-  background: #ffff1a;
+.hljs-attr {
+  cursor: pointer;
+}
+.hljs-attr.is-selected {
+  background: #ffff4d;
+}
+.hljs-attr:hover {
+  background: #ffffbf;
+}
+.hljs-attr:hover.is-selected {
+  background: #ffff4d;
 }
 /*# sourceMappingURL=style.css.map */

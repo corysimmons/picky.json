@@ -144,5 +144,11 @@ pre
     &:active
       background: darken(white, 10%)
 
-.is-selected
-  background: lighten(yellow, 10%)
+.hljs-attr
+  cursor: pointer
+  &.is-selected
+    background: lighten(yellow, 30%)
+  &:hover
+    background: lighten(yellow, 75%)
+    &.is-selected
+      background: lighten(yellow, 30%)
