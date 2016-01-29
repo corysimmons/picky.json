@@ -116,6 +116,7 @@ textarea {
 }
 @media (min-width: 1000px) {
   .code-wrap {
+    height: calc(100vh - 70px);
     margin-top: 0;
     float: left;
     width: 50%;
