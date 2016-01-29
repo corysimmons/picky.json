@@ -21,6 +21,6 @@ $.ajax({
 // Hover highlight
 $('.hljs-attr').on('click', function () {
   $('.hljs-attr').removeClass('is-selected');
-  $(undefined).addClass('is-selected');
+  $(this).addClass('is-selected');
 });
 //# sourceMappingURL=picky.js.map

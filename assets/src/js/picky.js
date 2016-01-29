@@ -17,7 +17,7 @@ new Clipboard('.btn-clipboard')
 // )
 
 // Hover highlight
-$('.hljs-attr').on('click', () => {
+$('.hljs-attr').on('click', function() {
   $('.hljs-attr').removeClass('is-selected')
   $(this).addClass('is-selected')
 })
