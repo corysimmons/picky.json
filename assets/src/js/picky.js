@@ -5,7 +5,7 @@ hljs.initHighlightingOnLoad()
 new Clipboard('.btn-clipboard')
 
 // Load example data
-// $('.btn-example').click(() =>
+$('.btn-example').click(() =>
   $.ajax({
     url: './assets/dist/data/example-data.json',
     success: (data) => {
@@ -14,10 +14,15 @@ new Clipboard('.btn-clipboard')
     },
     dataType: 'text'
   })
-// )
+)
 
 // Hover highlight
-$(document).on('click', '.hljs-attr', function() {
-  $('.hljs-attr').removeClass('is-selected')
+$(document).on('click', 'code *', function() {
+  $('code *').removeClass('is-selected')
   $(this).addClass('is-selected')
+})
+
+$('textarea').keyup(() => {
+  $('code').html($('textarea').val())
+  hljs.highlightBlock($('code')[0])
 })
