@@ -1,13 +1,16 @@
 {
   "scripts": {
-    "start": "./node_modules/.bin/npm-run-all copy:* --parallel server:* styles:* scripts:*",
+    "start": "./node_modules/.bin/npm-run-all copy:* images:* --parallel server:* styles:* scripts:*",
     "server:browser-sync": "./node_modules/.bin/browser-sync start --no-notify --no-open --server --files='**/*.html, assets/dist/**/*'",
     "styles:stylus": "./node_modules/.bin/stylus -m -u autoprefixer-stylus -w assets/src/css/style.styl -o assets/dist/css",
     "scripts:babel": "./node_modules/.bin/babel -s -w -d assets/dist/js assets/src/js",
-    "copy:data": "cp -R assets/src/data assets/dist"
+    "copy:data": "cp -R assets/src/data assets/dist",
+    "images:svgo": "svgo -f assets/src/img -o assets/dist/img"
   },
   "babel": {
-    "presets": ["es2015"]
+    "presets": [
+      "es2015"
+    ]
   },
   "devDependencies": {
     "autoprefixer-stylus": "^0.9.1",
@@ -15,6 +18,7 @@
     "babel-preset-es2015": "^6.3.13",
     "browser-sync": "^2.11.1",
     "npm-run-all": "^1.5.1",
-    "stylus": "^0.53.0"
+    "stylus": "^0.53.0",
+    "svgo": "^0.6.1"
   }
 }
