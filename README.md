@@ -14,6 +14,7 @@
 ### Credits
 - [Dan Ford](https://github.com/danjford) created the JSON traversal function (the important part)
 - [Cory Simmons](https://github.com/corysimmons) created the rest
+- [Puppet Scientists](http://puppetscientists.com/) created the magnifying glass logo which is available on [flaticon.com](http://www.flaticon.com/)
 
 ### Why?
 Personally, I find it incredibly annoying having to visually parse complicated
