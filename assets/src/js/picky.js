@@ -4,6 +4,7 @@ const clipboard = new Clipboard('.btn-clipboard')
 // Load example data
 $('.btn-example').click(() => {
   $('textarea').val('')
+  $('#picked').val('')
   $.ajax({
     url: './assets/dist/data/example-data.json',
     success: (data) => {
@@ -67,7 +68,8 @@ $('textarea').keydown(function(e) {
       const start = this.selectionStart
       const end = this.selectionEnd
       const selected = val.substring(start, end)
-      let re, count
+      let re = ''
+      let count = ''
 
       if (e.shiftKey) {
         re = /^\t/gm
@@ -89,7 +91,22 @@ $('textarea').keydown(function(e) {
 })
 
 $('textarea').keyup(function() {
-  // Send textarea code to highlight.js <code> container
-  $('code').html($('textarea').val())
-  hljs.highlightBlock($('code')[0])
+  const textareaContents = $('textarea').val().trim()
+  $('#picked').val('')
+
+  $.ajax({
+    url: textareaContents,
+    type: 'GET',
+    dataType: 'json',
+    success: (data) => {
+      $('code').html(JSON.stringify(data, null, '\t'))
+      hljs.highlightBlock($('code')[0])
+    },
+    error: () => {
+      // Send textarea code to highlight.js <code> container
+      console.log(`Sorry for spamming the crap out of your console! https://github.com/corysimmons/picky.json/issues/4`)
+      $('code').html($('textarea').val())
+      hljs.highlightBlock($('code')[0])
+    }
+  })
 })
