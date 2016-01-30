@@ -77,7 +77,10 @@ textarea {
   font-family: 'Roboto Mono', sans-serif;
   font-weight: 100;
   font-size: 0.5rem;
-  line-height: 2;
+  line-height: 1.75;
+  -moz-tab-size: 2;
+    -o-tab-size: 2;
+       tab-size: 2;
 }
 main {
   height: calc(100vh - 60px);
@@ -186,5 +189,8 @@ code *:hover {
 }
 code *:hover.is-selected {
   background: #ffff4d;
+}
+.hljs-attr {
+  font-weight: normal;
 }
 /*# sourceMappingURL=style.css.map */

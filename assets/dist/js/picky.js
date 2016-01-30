@@ -1,10 +1,7 @@
 'use strict';
 
-// Init syntax highlighter
-hljs.initHighlightingOnLoad();
-
 // Activate clipboard
-new Clipboard('.btn-clipboard');
+var clipboard = new Clipboard('.btn-clipboard');
 
 // Load example data
 $('.btn-example').click(function () {
@@ -24,7 +21,39 @@ $(document).on('click', 'code *', function () {
   $(this).addClass('is-selected');
 });
 
+$('textarea').keydown(function (e) {
+  // Allow insertion of tabs - http://stackoverflow.com/a/28483558/175825
+  if (e.which === 9) {
+    e.preventDefault();
+    if (this.value) {
+      var val = this.value;
+      var start = this.selectionStart;
+      var end = this.selectionEnd;
+      var selected = val.substring(start, end);
+      var re = undefined,
+          count = undefined;
+
+      if (e.shiftKey) {
+        re = /^\t/gm;
+        count = -selected.match(re).length;
+        this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end);
+      } else {
+        re = /^/gm;
+        count = selected.match(re).length;
+        this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end);
+      }
+      if (start === end) {
+        this.selectionStart = end + count;
+      } else {
+        this.selectionStart = start;
+      }
+      this.selectionEnd = end + count;
+    }
+  }
+});
+
 $('textarea').keyup(function () {
+  // Send textarea code to highlight.js <code> container
   $('code').html($('textarea').val());
   hljs.highlightBlock($('code')[0]);
 });
