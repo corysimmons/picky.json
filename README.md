@@ -1,13 +1,13 @@
 <h1 align="center">picky.json</h1>
 
 <p align="center">
-  :sparkles: Input JSON. Click values. Get selector. :sparkles:
+  :sparkles: Dump JSON. Click value. Get selector. :sparkles:
 </p>
 
 ### Usage
 - Go to [pickyjson.com](http://pickyjson.com)
-- Input **[valid JSON](http://jsonlint.com/)**
-- Click a value in your JSON
+- Input **[valid JSON](http://jsonlint.com/)** or input a URL that returns valid JSON
+- Click a value in the JSON on the right
 - Copy and enjoy the selector
 - Tell your friends
 
@@ -23,3 +23,6 @@ in objects nested in arrays (you get the point)...
 
 This project was inspired by the need for such a tool.
 Another tool that does a similar job and came first is [JSON Selector](http://jsonselector.com).
+
+### Interested in Helping?
+Find or file an [issue](https://github.com/corysimmons/picky.json/issues), then head on over to the [gh-pages](https://github.com/corysimmons/picky.json/tree/gh-pages) branch.
