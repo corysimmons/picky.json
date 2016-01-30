@@ -4,7 +4,6 @@
     "server:browser-sync": "./node_modules/.bin/browser-sync start --no-notify --no-open --server --files='**/*.html, assets/dist/**/*'",
     "styles:stylus": "./node_modules/.bin/stylus -m -u autoprefixer-stylus -w assets/src/css/style.styl -o assets/dist/css",
     "scripts:babel": "./node_modules/.bin/babel -s -w -d assets/dist/js assets/src/js",
-    "copy:data": "cp -R assets/src/data assets/dist",
     "copy:clipboard": "cp node_modules/clipboard/dist/clipboard.js assets/dist/js/",
     "copy:jquery": "cp node_modules/jquery/dist/jquery.min.js assets/dist/js/",
     "copy:images": "cp -R assets/src/img assets/dist",

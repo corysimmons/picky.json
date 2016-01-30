@@ -25,9 +25,10 @@ setInterval(validNotification, 500);
 $('.btn-example').click(function () {
   $('#picked').val('');
   $.ajax({
-    url: './assets/dist/data/example-data.json',
+    url: 'https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco',
     success: function success(data) {
-      $('code').add('textarea').html(data);
+      $('textarea').text('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco');
+      $('code').html(data);
       hljs.highlightBlock($('code')[0]);
     },
     dataType: 'text'
