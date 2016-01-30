@@ -20,7 +20,7 @@ trans($speed = 200ms)
   transition: all $speed ease
 
 body
-  font-family: 'Roboto', serif
+  font-family: 'Roboto', sans-serif
   line-height: 1.5
   color: lighten(black, 20%)
 
@@ -66,10 +66,11 @@ h1
   @media (min-width: $tablet)
     margin-top: 26px
 
-code
-  font-family: 'Roboto Mono', serif
+code, textarea
+  font-family: 'Roboto Mono', sans-serif
   font-weight: 100
   font-size: .5rem
+  line-height: 2
 
 main
   cf()
@@ -86,7 +87,6 @@ textarea
   outline: 0
   resize: none
   padding: 15px
-  font-size: 1rem
   @media (min-width: $tablet)
     border-bottom: 0
     border-right: 1px solid darken(white, 10%)
@@ -103,12 +103,16 @@ textarea
     float: left
     width: 50%
 
-pre
-  padding: 10px
+code
+  display: block
   overflow: scroll
   height: calc(100vh - 60px - 20vh - 50px)
   @media (min-width: $tablet)
     height: calc(100vh - 75px - 50px)
+
+code.hljs
+  // Stop styling stuff you ugly libraries!
+  padding: 15px !important
 
 .grab
   height: 50px

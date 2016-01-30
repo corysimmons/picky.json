@@ -8,7 +8,7 @@
   box-sizing: border-box;
 }
 body {
-  font-family: 'Roboto', serif;
+  font-family: 'Roboto', sans-serif;
   line-height: 1.5;
   color: #333;
 }
@@ -72,10 +72,12 @@ h1 a {
     margin-top: 26px;
   }
 }
-code {
-  font-family: 'Roboto Mono', serif;
+code,
+textarea {
+  font-family: 'Roboto Mono', sans-serif;
   font-weight: 100;
   font-size: 0.5rem;
+  line-height: 2;
 }
 main {
   height: calc(100vh - 60px);
@@ -99,7 +101,6 @@ textarea {
   outline: 0;
   resize: none;
   padding: 15px;
-  font-size: 1rem;
 }
 @media (min-width: 1000px) {
   textarea {
@@ -122,15 +123,18 @@ textarea {
     width: 50%;
   }
 }
-pre {
-  padding: 10px;
+code {
+  display: block;
   overflow: scroll;
   height: calc(100vh - 60px - 20vh - 50px);
 }
 @media (min-width: 1000px) {
-  pre {
+  code {
     height: calc(100vh - 75px - 50px);
   }
+}
+code.hljs {
+  padding: 15px !important;
 }
 .grab {
   height: 50px;
