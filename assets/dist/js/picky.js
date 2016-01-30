@@ -62,24 +62,41 @@ $(document).on('click', '.hljs-string, .hljs-number', function () {
   $('#picked').val(foundVal.path);
 });
 
+var horizontalResize = function horizontalResize(offset) {
+  $('textarea').css('width', offset + '%');
+  $('.code-wrap').css('width', 100 - offset + '%');
+};
+
+var verticalResize = function verticalResize(offset) {
+  $('textarea').css('height', offset + '%');
+  $('.code-wrap').css('height', 100 - offset + '%');
+};
+
 var resizing = false;
-$('.resize').on('mousedown', function () {
+$('.resize').on('mousedown touchstart', function () {
 
   resizing = true;
 });
 
-$(document).on('mousemove', function (e) {
+$(document).on('mousemove touchmove', function (e) {
 
   if (!resizing) {
     return;
   }
 
-  var offset = e.pageX / document.querySelector('main').clientWidth * 100;
-  $('textarea').css('width', offset + '%');
-  $('.code-wrap').css('width', 100 - offset + '%');
-}).on('mouseup', function () {
+  if (document.querySelector('body').clientWidth >= 1000) {
+    horizontalResize(e.pageX / document.querySelector('main').clientWidth * 100);
+  } else {
+    verticalResize(e.pageY / document.querySelector('body').clientHeight * 100 - 5);
+  }
+}).on('mouseup touchend', function () {
 
   resizing = false;
+});
+
+// Remove the resize styles on window change so it doesn't get weird
+$(window).on('resize', function () {
+  $('textarea, .code-wrap').removeAttr('style');
 });
 
 $('textarea').keydown(function (e) {
