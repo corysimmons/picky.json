@@ -106,6 +106,7 @@ textarea {
 }
 main {
   height: calc(100vh - 60px);
+  width: 100%;
   overflow: hidden;
 }
 main:after {
@@ -120,7 +121,6 @@ main:after {
 }
 textarea {
   border: 0;
-  border-bottom: 1px solid #e6e6e6;
   width: 100%;
   height: 20vh;
   outline: 0;
@@ -130,7 +130,6 @@ textarea {
 @media (min-width: 1000px) {
   textarea {
     border-bottom: 0;
-    border-right: 1px solid #e6e6e6;
     float: left;
     width: 50%;
     height: calc(100vh - 75px);
@@ -138,11 +137,12 @@ textarea {
 }
 .code-wrap {
   height: calc(100vh - 20vh - 60px);
-  margin-top: -7px;
   position: relative;
+  border-top: 1px solid #e6e6e6;
 }
 @media (min-width: 1000px) {
   .code-wrap {
+    border-left: 1px solid #e6e6e6;
     height: calc(100vh - 70px);
     margin-top: 0;
     float: left;
@@ -200,6 +200,46 @@ code.hljs {
 }
 .grab .btn-clipboard:active {
   background: #e6e6e6;
+}
+.resize {
+  position: absolute;
+  left: 0;
+  top: -5px;
+  height: 10px;
+  width: 100%;
+  cursor: row-resize;
+  z-index: 2;
+}
+@media (min-width: 1000px) {
+  .resize {
+    width: 10px;
+    height: 100%;
+    top: 0;
+    left: -5px;
+    cursor: col-resize;
+  }
+}
+.holder {
+  background-color: #fcfcfc;
+  position: absolute;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  top: -1px;
+  left: 50%;
+  width: 30px;
+  height: 10px;
+  margin-left: -15px;
+  margin-top: 0;
+}
+@media (min-width: 1000px) {
+  .holder {
+    top: 50%;
+    left: -1px;
+    width: 10px;
+    height: 30px;
+    margin-top: -15px;
+    margin-left: 0;
+  }
 }
 .hljs-string,
 .hljs-number {

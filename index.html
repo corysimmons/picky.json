@@ -21,6 +21,9 @@
   <main>
     <textarea placeholder="Enter your valid JSON or JSON URL"></textarea>
     <div class="code-wrap">
+      <div class="resize">
+        <div class="holder"></div>
+      </div>
       <div class="grab">
         <input id="picked" type="text" placeholder="Click a value from your JSON">
         <button class="btn-clipboard" data-clipboard-target="#picked">Copy</button>
@@ -37,9 +40,9 @@
 
   <div class="parse-field"></div>
 
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="assets/dist/js/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
-  <script src="bower_components/clipboard/dist/clipboard.min.js"></script>
+  <script src="assets/dist/js/clipboard.js"></script>
   <script src="assets/dist/js/picky.js"></script>
 </body>
 </html>
