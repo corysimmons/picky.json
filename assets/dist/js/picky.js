@@ -33,7 +33,7 @@ var searchObj = function searchObj(searchTerm, object) {
           pointer = key;
           search(searchTerm, object[key]);
         }
-      } else if (object[key].toString() === searchTerm.toString() || object[key].toString().indexOf(searchTerm.toString()) > -1) {
+      } else if (object[key].toString().indexOf(searchTerm.toString()) > -1) {
         pointer = key;
         foundVal = object[key];
         stopSearch = true;
