@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "start": "./node_modules/npm-run-all/bin/npm-run-all.js copy:* --parallel server:* styles:* scripts:*",
-    "server:browser-sync": "./node_modules/browser-sync/bin/browser-sync.js start --no-notify --no-open --server --files='**/*.html, assets/dist/**/*'",
-    "styles:stylus": "./node_modules/stylus/bin/stylus -m -u autoprefixer-stylus -w assets/src/css/style.styl -o assets/dist/css",
-    "scripts:babel": "./node_modules/babel-cli/bin/babel.js -s -w -d assets/dist/js assets/src/js",
+    "start": "./node_modules/.bin/npm-run-all copy:* --parallel server:* styles:* scripts:*",
+    "server:browser-sync": "./node_modules/.bin/browser-sync start --no-notify --no-open --server --files='**/*.html, assets/dist/**/*'",
+    "styles:stylus": "./node_modules/.bin/stylus -m -u autoprefixer-stylus -w assets/src/css/style.styl -o assets/dist/css",
+    "scripts:babel": "./node_modules/.bin/babel -s -w -d assets/dist/js assets/src/js",
     "copy:data": "cp -R assets/src/data assets/dist"
   },
   "babel": {
