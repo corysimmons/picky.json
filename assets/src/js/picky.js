@@ -19,12 +19,11 @@ setInterval(validNotification, 500)
 
 // Load example data
 $('.btn-example').click(() => {
-  $('textarea').val('')
   $('#picked').val('')
   $.ajax({
     url: './assets/dist/data/example-data.json',
     success: (data) => {
-      $('code').html(data)
+      $('code').add('textarea').html(data)
       hljs.highlightBlock($('code')[0])
     },
     dataType: 'text'
