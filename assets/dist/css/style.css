@@ -178,19 +178,35 @@ code.hljs {
 .grab .btn-clipboard:active {
   background: #e6e6e6;
 }
-code * {
+.hljs-string,
+.hljs-number {
   cursor: pointer;
 }
-code *.is-selected {
+.hljs-string.is-selected,
+.hljs-number.is-selected {
   background: #ffff4d;
 }
-code *:hover {
+.hljs-string:hover,
+.hljs-number:hover {
   background: #ffffbf;
 }
-code *:hover.is-selected {
+.hljs-string:hover.is-selected,
+.hljs-number:hover.is-selected {
   background: #ffff4d;
 }
 .hljs-attr {
   font-weight: normal;
+}
+.parse-field {
+  position: fixed;
+  left: 30px;
+  top: 30px;
+  right: 50%;
+  bottom: 30px;
+  background: #d2e9ff;
+  border: 1px solid #8fc7ff;
+  border-radius: 3px;
+  padding: 15px;
+  display: none;
 }
 /*# sourceMappingURL=style.css.map */

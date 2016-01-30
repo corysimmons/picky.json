@@ -1,11 +1,14 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 // Activate clipboard
 var clipboard = new Clipboard('.btn-clipboard');
 
 // Load example data
 $('.btn-example').click(function () {
-  return $.ajax({
+  $('textarea').val('');
+  $.ajax({
     url: './assets/dist/data/example-data.json',
     success: function success(data) {
       $('code').html(data);
@@ -15,10 +18,62 @@ $('.btn-example').click(function () {
   });
 });
 
-// Hover highlight
-$(document).on('click', 'code *', function () {
+// Traverse the object and sift out the selector
+// Courtesy of https://github.com/danjford
+var searchObj = function searchObj(searchTerm, object) {
+  var path = [];
+  var foundVal = '';
+  var stopSearch = false;
+
+  function search(searchTerm, object) {
+    var pointer = undefined;
+    for (var key in object) {
+      if (_typeof(object[key]) === 'object') {
+        if (!stopSearch) {
+          pointer = key;
+          search(searchTerm, object[key]);
+        }
+      } else if (object[key].toString().indexOf(searchTerm) > -1) {
+        pointer = key;
+        foundVal = object[key];
+        stopSearch = true;
+      }
+      if (stopSearch) break;
+    }
+    if (stopSearch) {
+      path.push(isNaN(pointer) ? pointer : '[' + pointer + ']');
+    }
+  }
+  search(searchTerm, object);
+  return {
+    value: foundVal,
+    path: path.reverse().join('.').replace(/\.\[/g, '[').replace(/\.$/, '')
+  };
+};
+
+$(document).on('click', '.hljs-string, .hljs-number', function () {
+  // Click highlight
   $('code *').removeClass('is-selected');
   $(this).addClass('is-selected');
+
+  // Add 133713371337 to value (for searching, needs to be a number so non-string values don't wet the bed)
+  // Place JSON with 133713371337 in hidden element
+  // Remove 133713371337 from viewable JSON
+  var selected = $(this).text();
+  // If it's a double quoted string, add 133713371337 to the end, inside of the quotes
+  $(this).text(selected.replace(/"(.*)"/, '"$1133713371337"'));
+  // If it's anything else (e.g. numbers), add 133713371337 to the end of it
+  if (!$(this).text().match(/133713371337/)) {
+    $(this).text(selected + '133713371337');
+  }
+  // Move <code> contents to hidden .parse-field div
+  $('.parse-field').text($('code').text());
+  // Remove 133713371337 from the selected text so people don't see what we just did
+  $(this).text($(this).text().replace(/133713371337/, ''));
+
+  // Find selector and display in disabled input field
+  var foundVal = searchObj('133713371337', $.parseJSON($('.parse-field').text()));
+  $('#picked').val(foundVal.path);
 });
 
 $('textarea').keydown(function (e) {

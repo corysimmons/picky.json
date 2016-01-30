@@ -149,7 +149,7 @@ code.hljs
     &:active
       background: darken(white, 10%)
 
-code *
+.hljs-string, .hljs-number
   cursor: pointer
   &.is-selected
     background: lighten(yellow, 30%)
@@ -160,3 +160,16 @@ code *
 
 .hljs-attr
   font-weight: normal
+
+.parse-field
+  position: fixed
+  left: 30px
+  top: 30px
+  right: 50%
+  bottom: 30px
+  background: lighten(dodgerblue, 80%)
+  border: 1px solid lighten(dodgerblue, 50%)
+  border-radius: 3px
+  padding: 15px
+
+  display: none
