@@ -8,6 +8,7 @@ $('.btn-example').click(() => {
     url: './assets/dist/data/example-data.json',
     success: (data) => {
       $('code').html(data)
+      $('textarea').val(data)
       hljs.highlightBlock($('code')[0])
     },
     dataType: 'text'

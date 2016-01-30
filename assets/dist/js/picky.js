@@ -12,6 +12,7 @@ $('.btn-example').click(function () {
     url: './assets/dist/data/example-data.json',
     success: function success(data) {
       $('code').html(data);
+      $('textarea').val(data);
       hljs.highlightBlock($('code')[0]);
     },
     dataType: 'text'
