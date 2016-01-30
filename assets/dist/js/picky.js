@@ -13,7 +13,6 @@ $('.btn-example').click(function () {
     url: './assets/dist/data/example-data.json',
     success: function success(data) {
       $('code').html(data);
-      $('textarea').val(data);
       hljs.highlightBlock($('code')[0]);
     },
     dataType: 'text'
@@ -61,6 +60,26 @@ $(document).on('click', '.hljs-string, .hljs-number', function () {
   // Find selector and display in disabled input field
   var foundVal = searchObj($(this).text().replace(/[\"]/g, ''), $.parseJSON($('code').text()));
   $('#picked').val(foundVal.path);
+});
+
+var resizing = false;
+$('.resize').on('mousedown', function () {
+
+  resizing = true;
+});
+
+$(document).on('mousemove', function (e) {
+
+  if (!resizing) {
+    return;
+  }
+
+  var offset = e.pageX / document.querySelector('main').clientWidth * 100;
+  $('textarea').css('width', offset + '%');
+  $('.code-wrap').css('width', 100 - offset + '%');
+}).on('mouseup', function () {
+
+  resizing = false;
 });
 
 $('textarea').keydown(function (e) {

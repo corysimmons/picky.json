@@ -139,6 +139,7 @@ textarea {
 .code-wrap {
   height: calc(100vh - 20vh - 60px);
   margin-top: -7px;
+  position: relative;
 }
 @media (min-width: 1000px) {
   .code-wrap {
@@ -199,6 +200,13 @@ code.hljs {
 }
 .grab .btn-clipboard:active {
   background: #e6e6e6;
+}
+.resize {
+  position: absolute;
+  width: 10px;
+  height: 100%;
+  left: -5px;
+  cursor: col-resize;
 }
 .hljs-string,
 .hljs-number {
