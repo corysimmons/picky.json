@@ -8,6 +8,7 @@ var clipboard = new Clipboard('.btn-clipboard');
 // Load example data
 $('.btn-example').click(function () {
   $('textarea').val('');
+  $('#picked').val('');
   $.ajax({
     url: './assets/dist/data/example-data.json',
     success: function success(data) {
@@ -94,6 +95,7 @@ $('textarea').keydown(function (e) {
 
 $('textarea').keyup(function () {
   var textareaContents = $('textarea').val().trim();
+  $('#picked').val('');
 
   $.ajax({
     url: textareaContents,
