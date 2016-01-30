@@ -1,6 +1,22 @@
 // Activate clipboard
 const clipboard = new Clipboard('.btn-clipboard')
 
+// Test if JSON is valid and trigger notification if it's not
+const validNotification = () => {
+  if ($('textarea').val() !== '') {
+    try {
+      $.parseJSON($('code').text())
+      $('.invalid-json').fadeOut()
+    } catch (err) {
+      $('.invalid-json').fadeIn()
+    }
+  } else {
+    $('.invalid-json').fadeOut()
+  }
+}
+
+setInterval(validNotification, 500)
+
 // Load example data
 $('.btn-example').click(() => {
   $('textarea').val('')

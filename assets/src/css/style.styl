@@ -210,13 +210,27 @@ code.hljs
   font-weight: normal
 
 .parse-field
-  position: fixed
-  left: 30px
-  top: 30px
-  right: 50%
-  bottom: 30px
-  background: lighten(dodgerblue, 80%)
-  border: 1px solid lighten(dodgerblue, 50%)
-  border-radius: 3px
-  padding: 15px
   display: none
+
+.invalid-json
+  display: none
+  position: absolute
+  bottom: 27px
+  left: 7px
+  right: 22px
+  background: rgba(tomato, 80%)
+  padding: 10px
+  border-radius: 3px
+  color: white
+  border: 1px solid rgba(tomato, 90%)
+  font-size: .75rem
+  font-weight: normal
+  text-align: center
+  a
+    color: white
+    text-decoration: none
+    padding: 2px
+    border-bottom: 1px solid rgba(white, 50%)
+    trans(500ms)
+    &:hover
+      border-bottom-color: rgba(white, 75%)

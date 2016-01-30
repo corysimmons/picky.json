@@ -261,15 +261,32 @@ code.hljs {
   font-weight: normal;
 }
 .parse-field {
-  position: fixed;
-  left: 30px;
-  top: 30px;
-  right: 50%;
-  bottom: 30px;
-  background: #d2e9ff;
-  border: 1px solid #8fc7ff;
-  border-radius: 3px;
-  padding: 15px;
   display: none;
+}
+.invalid-json {
+  display: none;
+  position: absolute;
+  bottom: 27px;
+  left: 7px;
+  right: 22px;
+  background: rgba(255,99,71,0.8);
+  padding: 10px;
+  border-radius: 3px;
+  color: #fff;
+  border: 1px solid rgba(255,99,71,0.9);
+  font-size: 0.75rem;
+  font-weight: normal;
+  text-align: center;
+}
+.invalid-json a {
+  color: #fff;
+  text-decoration: none;
+  padding: 2px;
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  -webkit-transition: all 500ms ease;
+  transition: all 500ms ease;
+}
+.invalid-json a:hover {
+  border-bottom-color: rgba(255,255,255,0.75);
 }
 /*# sourceMappingURL=style.css.map */
