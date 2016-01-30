@@ -94,7 +94,7 @@ $(document).on('mousemove touchmove', function(e) {
 
 })
 
-// Remove the resize styles on window change so it doesn't get weird
+// Remove the resize styles on window change so it doesn't get wierd
 $(window).on('resize', function() {
   $('textarea, .code-wrap').removeAttr('style')
 })
