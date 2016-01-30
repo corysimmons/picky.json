@@ -111,6 +111,7 @@ textarea
 .code-wrap
   height: calc(100vh - 20vh - 60px)
   margin-top: -7px
+  position: relative
   @media (min-width: $tablet)
     height: calc(100vh - 70px)
     margin-top: 0
@@ -176,3 +177,26 @@ code.hljs
 
 .parse-field
   display: none
+
+.invalid-json
+  display: none
+  position: absolute
+  bottom: 27px
+  left: 7px
+  right: 22px
+  background: rgba(tomato, 80%)
+  padding: 10px
+  border-radius: 3px
+  color: white
+  border: 1px solid rgba(tomato, 90%)
+  font-size: .75rem
+  font-weight: normal
+  text-align: center
+  a
+    color: white
+    text-decoration: none
+    padding: 2px
+    border-bottom: 1px solid rgba(white, 50%)
+    trans(500ms)
+    &:hover
+      border-bottom-color: rgba(white, 75%)

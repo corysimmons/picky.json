@@ -5,6 +5,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // Activate clipboard
 var clipboard = new Clipboard('.btn-clipboard');
 
+// Test if JSON is valid and trigger notification if it's not
+var validNotification = function validNotification() {
+  if ($('textarea').val() !== '') {
+    try {
+      $.parseJSON($('code').text());
+      $('.invalid-json').fadeOut();
+    } catch (err) {
+      $('.invalid-json').fadeIn();
+    }
+  } else {
+    $('.invalid-json').fadeOut();
+  }
+};
+
+setInterval(validNotification, 500);
+
 // Load example data
 $('.btn-example').click(function () {
   $('textarea').val('');
