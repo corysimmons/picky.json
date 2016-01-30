@@ -52,26 +52,8 @@ $(document).on('click', '.hljs-string, .hljs-number', function() {
   $('code *').removeClass('is-selected')
   $(this).addClass('is-selected')
 
-  // Add 133713371337 to value (for searching)
-  // Place JSON with 133713371337 in hidden element
-  // Remove 133713371337 from viewable JSON
-  const selected = $(this).text()
-
-  // If it's a double quoted string, add 133713371337 to the end, inside of the quotes
-  $(this).text(selected.replace(/"(.*)"/, '"$1133713371337"'))
-
-  // If it's anything else (e.g. numbers), add 133713371337 to the end of it and wrap it in double quotes
-  if (!$(this).text().match(/133713371337/)) {
-    $(this).text(`"${selected}133713371337"`)
-    $('.parse-field').text($('code').text())
-    $(this).text( $(this).text().replace(/133713371337|"/g, ''))
-  } else {
-    $('.parse-field').text($('code').text())
-    $(this).text( $(this).text().replace(/133713371337/, ''))
-  }
-
   // Find selector and display in disabled input field
-  const foundVal = searchObj('133713371337', $.parseJSON($('.parse-field').text()))
+  const foundVal = searchObj($(this).text().replace(/[\"]/g, ''), $.parseJSON($('code').text()))
   $('#picked').val(foundVal.path)
 })
 
