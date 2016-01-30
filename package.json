@@ -1,13 +1,14 @@
 {
   "scripts": {
-    "start": "./node_modules/.bin/npm-run-all copy:* --parallel server:* styles:* scripts:*",
+    "start": "./node_modules/.bin/npm-run-all copy:* images:* --parallel server:* styles:* scripts:*",
     "server:browser-sync": "./node_modules/.bin/browser-sync start --no-notify --no-open --server --files='**/*.html, assets/dist/**/*'",
     "styles:stylus": "./node_modules/.bin/stylus -m -u autoprefixer-stylus -w assets/src/css/style.styl -o assets/dist/css",
     "scripts:babel": "./node_modules/.bin/babel -s -w -d assets/dist/js assets/src/js",
     "copy:data": "cp -R assets/src/data assets/dist",
     "copy:clipboard": "cp node_modules/clipboard/dist/clipboard.js assets/dist/js/",
     "copy:jquery": "cp node_modules/jquery/dist/jquery.min.js assets/dist/js/",
-    "copy:highlight": "cp node_modules/highlight.js/lib/highlight.js assets/dist/js/"
+    "copy:highlight": "cp node_modules/highlight.js/lib/highlight.js assets/dist/js/",
+    "images:svgo": "svgo -f assets/src/img -o assets/dist/img"
   },
   "babel": {
     "presets": [
@@ -24,6 +25,8 @@
   },
   "dependencies": {
     "clipboard": "^1.5.5",
-    "jquery": "^2.2.0"
+    "jquery": "^2.2.0",
+    "stylus": "^0.53.0",
+    "svgo": "^0.6.1"
   }
 }
