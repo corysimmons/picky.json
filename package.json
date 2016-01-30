@@ -5,7 +5,8 @@
     "styles:stylus": "./node_modules/.bin/stylus -m -u autoprefixer-stylus -w assets/src/css/style.styl -o assets/dist/css",
     "scripts:babel": "./node_modules/.bin/babel -s -w -d assets/dist/js assets/src/js",
     "copy:data": "cp -R assets/src/data assets/dist",
-    "images:svgo": "svgo -f assets/src/img -o assets/dist/img"
+    "copy:images": "cp -R assets/src/img assets/dist",
+    "images:svgo": "svgo -f assets/dist/img"
   },
   "babel": {
     "presets": [
