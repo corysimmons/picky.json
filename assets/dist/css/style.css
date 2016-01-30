@@ -220,15 +220,6 @@ code.hljs {
   font-weight: normal;
 }
 .parse-field {
-  position: fixed;
-  left: 30px;
-  top: 30px;
-  right: 50%;
-  bottom: 30px;
-  background: #d2e9ff;
-  border: 1px solid #8fc7ff;
-  border-radius: 3px;
-  padding: 15px;
   display: none;
 }
 /*# sourceMappingURL=style.css.map */
