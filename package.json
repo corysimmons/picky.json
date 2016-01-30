@@ -8,7 +8,8 @@
     "copy:clipboard": "cp node_modules/clipboard/dist/clipboard.js assets/dist/js/",
     "copy:jquery": "cp node_modules/jquery/dist/jquery.min.js assets/dist/js/",
     "copy:highlight": "cp node_modules/highlight.js/lib/highlight.js assets/dist/js/",
-    "images:svgo": "svgo -f assets/src/img -o assets/dist/img"
+    "copy:images": "cp -R assets/src/img assets/dist",
+    "images:svgo": "svgo -f assets/dist/img"
   },
   "babel": {
     "presets": [
