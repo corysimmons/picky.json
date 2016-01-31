@@ -1,5 +1,8 @@
+/* global $, Clipboard, hljs */
+
 // Activate clipboard
-const clipboard = new Clipboard('.btn-clipboard')
+const clipboard = new Clipboard('.btn-clipboard') // Stop crying Firefox!
+clipboard // stop crying StandardJS!
 
 // Test if JSON is valid and trigger notification if it's not
 const validNotification = () => {
@@ -64,7 +67,7 @@ const searchObj = (searchTerm, object) => {
   }
 }
 
-$(document).on('click', '.hljs-string, .hljs-number', function() {
+$(document).on('click', '.hljs-string, .hljs-number', () => {
   // Click highlight
   $('code *').removeClass('is-selected')
   $(this).addClass('is-selected')
@@ -108,7 +111,7 @@ $(window).on('resize', () =>
   $('textarea, .code-wrap').removeAttr('style')
 )
 
-$('textarea').keydown(function(e) {
+$('textarea').keydown((e) => {
   // Allow insertion of tabs - http://stackoverflow.com/a/28483558/175825
   if (e.which === 9) {
     e.preventDefault()
@@ -139,10 +142,12 @@ $('textarea').keydown(function(e) {
   }
 })
 
-$('textarea').keyup(function() {
+// Test the input to see if it's a JSON url
+// If it is, populate <code> with that data
+// If it's not, populate <code> with whatever is in <textarea>
+$('textarea').keyup(() => {
   const textareaContents = $('textarea').val().trim()
   $('#picked').val('')
-
   $.ajax({
     url: textareaContents,
     type: 'GET',
@@ -159,11 +164,3 @@ $('textarea').keyup(function() {
     }
   })
 })
-
-// Google Analytics - Tracking your every move
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-ga('create', 'UA-73075096-1', 'auto');
-ga('send', 'pageview');

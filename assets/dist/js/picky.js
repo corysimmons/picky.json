@@ -2,8 +2,11 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
+/* global $, Clipboard, hljs */
+
 // Activate clipboard
-var clipboard = new Clipboard('.btn-clipboard');
+var clipboard = new Clipboard('.btn-clipboard'); // Stop crying Firefox!
+clipboard; // stop crying StandardJS!
 
 // Test if JSON is valid and trigger notification if it's not
 var validNotification = function validNotification() {
@@ -71,10 +74,10 @@ var searchObj = function searchObj(searchTerm, object) {
 $(document).on('click', '.hljs-string, .hljs-number', function () {
   // Click highlight
   $('code *').removeClass('is-selected');
-  $(this).addClass('is-selected');
+  $(undefined).addClass('is-selected');
 
   // Find selector and display in disabled input field
-  var foundVal = searchObj($(this).text().replace(/[\"]/g, ''), $.parseJSON($('code').text()));
+  var foundVal = searchObj($(undefined).text().replace(/[\"]/g, ''), $.parseJSON($('code').text()));
   $('#picked').val(foundVal.path);
 });
 
@@ -116,10 +119,10 @@ $('textarea').keydown(function (e) {
   // Allow insertion of tabs - http://stackoverflow.com/a/28483558/175825
   if (e.which === 9) {
     e.preventDefault();
-    if (this.value) {
-      var val = this.value;
-      var start = this.selectionStart;
-      var end = this.selectionEnd;
+    if (undefined.value) {
+      var val = undefined.value;
+      var start = undefined.selectionStart;
+      var end = undefined.selectionEnd;
       var selected = val.substring(start, end);
       var re = '';
       var count = '';
@@ -127,26 +130,28 @@ $('textarea').keydown(function (e) {
       if (e.shiftKey) {
         re = /^\t/gm;
         count = -selected.match(re).length;
-        this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end);
+        undefined.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end);
       } else {
         re = /^/gm;
         count = selected.match(re).length;
-        this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end);
+        undefined.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end);
       }
       if (start === end) {
-        this.selectionStart = end + count;
+        undefined.selectionStart = end + count;
       } else {
-        this.selectionStart = start;
+        undefined.selectionStart = start;
       }
-      this.selectionEnd = end + count;
+      undefined.selectionEnd = end + count;
     }
   }
 });
 
+// Test the input to see if it's a JSON url
+// If it is, populate <code> with that data
+// If it's not, populate <code> with whatever is in <textarea>
 $('textarea').keyup(function () {
   var textareaContents = $('textarea').val().trim();
   $('#picked').val('');
-
   $.ajax({
     url: textareaContents,
     type: 'GET',
@@ -162,14 +167,5 @@ $('textarea').keyup(function () {
       hljs.highlightBlock($('code')[0]);
     }
   });
-})
-
-// Google Analytics - Tracking your every move
-(function (i, s, o, g, r, a, m) {
-  i['GoogleAnalyticsObject'] = r;i[r] = i[r] || function () {
-    (i[r].q = i[r].q || []).push(arguments);
-  }, i[r].l = 1 * new Date();a = s.createElement(o), m = s.getElementsByTagName(o)[0];a.async = 1;a.src = g;m.parentNode.insertBefore(a, m);
-})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-ga('create', 'UA-73075096-1', 'auto');
-ga('send', 'pageview');
+});
 //# sourceMappingURL=picky.js.map
