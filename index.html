@@ -1,49 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>picky.json | Dump JSON. Click value. Get selector.</title>
-  <link rel="icon" type="image/ico" href="assets/dist/img/favicon.ico">
-  <link rel="stylesheet" href="assets/dist/css/style.css">
-</head>
-<body>
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>picky.json | Dump JSON. Click value. Get selector.</title>
+    <meta name="description" content="Manually parsing JSON to get the selector you want is human error prone and just not much fun. picky.json lets you input raw JSON (or a URL that returns JSON) and then click on a value to get the selector you need quickly and easily!">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/ico" href="assets/dist/img/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+    <link rel="stylesheet" href="assets/dist/css/style.css">
+  </head>
+  <body>
 
-  <header>
-    <h1>
-      <a href="http://github.com/corysimmons/picky.json" target="_blank">
-        <img src="assets/dist/img/magnifying-glass.svg">
-        <span>picky.json</span>
-      </a>
-    </h1>
-    <button class="btn-example">Load Example JSON</button>
-  </header>
+    <header>
+      <h1>
+        <a href="http://github.com/corysimmons/picky.json" target="_blank">
+          <img src="assets/dist/img/magnifying-glass.svg">
+          <span>picky.json</span>
+        </a>
+      </h1>
+      <button class="btn-example">Load Example JSON</button>
+    </header>
 
-  <main>
-    <textarea placeholder="Enter your valid JSON or JSON URL" wrap="off"></textarea>
-    <div class="code-wrap">
-      <div class="resize">
-        <div class="holder"></div>
+    <main>
+      <textarea placeholder="Enter your valid JSON or JSON URL" wrap="off"></textarea>
+      <div class="code-wrap">
+        <div class="resize">
+          <div class="holder"></div>
+        </div>
+        <div class="grab">
+          <input id="picked" type="text" placeholder="Click a value from your JSON">
+          <button class="btn-clipboard" data-clipboard-target="#picked">Copy</button>
+        </div>
+        <pre><code class="json"></code></pre>
+        <div class="invalid-json">
+          <p>
+            JSON isn't valid. Picky won't work.
+            Check out <a href="http://jsonlint.com/" target="_blank">jsonlint.com</a> to find out exactly what's wrong.
+          </p>
+        </div>
       </div>
-      <div class="grab">
-        <input id="picked" type="text" placeholder="Click a value from your JSON">
-        <button class="btn-clipboard" data-clipboard-target="#picked">Copy</button>
-      </div>
-      <pre><code class="json"></code></pre>
-      <div class="invalid-json">
-        <p>
-          JSON isn't valid. Picky won't work.
-          Check out <a href="http://jsonlint.com/" target="_blank">jsonlint.com</a> to find out exactly what's wrong.
-        </p>
-      </div>
-    </div>
-  </main>
+    </main>
 
-  <div class="parse-field"></div>
+    <div class="parse-field"></div>
 
-  <script src="assets/dist/js/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
-  <script src="assets/dist/js/clipboard.js"></script>
-  <script src="assets/dist/js/picky.js"></script>
-  <script src="assets/dist/js/analytics.js"></script>
-</body>
+    <script src="assets/dist/js/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+    <script src="assets/dist/js/clipboard.js"></script>
+    <script src="assets/dist/js/picky.js"></script>
+    <script src="assets/dist/js/analytics.js"></script>
+  </body>
 </html>

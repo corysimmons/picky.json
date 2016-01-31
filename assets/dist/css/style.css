@@ -1,7 +1,7 @@
 @import 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css';
 @import 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/github-gist.min.css';
-@import url("https://fonts.googleapis.com/css?family=Roboto:100");
-@import url("https://fonts.googleapis.com/css?family=Roboto+Mono:300,500");
+@import url("https://fonts.googleapis.com/css?family=Roboto:100,300,500");
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono:300");
 * {
   margin: 0;
   padding: 0;
@@ -82,6 +82,7 @@ h1 a span {
   color: #fff;
   outline: 0;
   margin-top: 18px;
+  font-weight: 300;
 }
 .btn-example:hover {
   background: rgba(255,255,255,0.05);
@@ -97,7 +98,6 @@ h1 a span {
 code,
 textarea {
   font-family: 'Roboto Mono', sans-serif;
-  font-weight: 100;
   font-size: 0.5rem;
   line-height: 1.75;
   -moz-tab-size: 2;
@@ -170,9 +170,14 @@ code.hljs {
   border-bottom: 1px solid #e6e6e6;
   outline: 0;
   padding: 0 10px;
-  font-size: 1rem;
+  font-size: 0.75rem;
   height: 50px;
   line-height: 50px;
+  font-weight: 500;
+  color: #4d4d4d;
+}
+.grab input:placeholder-shown {
+  font-weight: 300;
 }
 .grab .btn-clipboard {
   position: absolute;
@@ -185,16 +190,17 @@ code.hljs {
   border-top: 0;
   border-right: 0;
   background: #f2f2f2;
-  color: #999;
+  color: #808080;
   text-transform: uppercase;
-  letter-spacing: 0.25em;
   -webkit-transition: all 200ms ease;
   transition: all 200ms ease;
   outline: none;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
   cursor: pointer;
 }
 .grab .btn-clipboard:hover {
-  background: #ededed;
+  background: #f0f0f0;
 }
 .grab .btn-clipboard:active {
   background: #e6e6e6;
@@ -245,7 +251,7 @@ code.hljs {
 }
 .hljs-string.is-selected,
 .hljs-number.is-selected {
-  background: #ffff4d;
+  background: #ffff80;
 }
 .hljs-string:hover,
 .hljs-number:hover {
@@ -253,10 +259,7 @@ code.hljs {
 }
 .hljs-string:hover.is-selected,
 .hljs-number:hover.is-selected {
-  background: #ffff4d;
-}
-.hljs-attr {
-  font-weight: normal;
+  background: #ffff80;
 }
 .parse-field {
   display: none;
@@ -273,7 +276,6 @@ code.hljs {
   color: #fff;
   border: 1px solid rgba(255,99,71,0.9);
   font-size: 0.75rem;
-  font-weight: normal;
   text-align: center;
 }
 .invalid-json a {

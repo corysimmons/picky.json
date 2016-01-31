@@ -1,7 +1,7 @@
 @import 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css'
 @import 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/github-gist.min.css'
-@import url(https://fonts.googleapis.com/css?family=Roboto:100)
-@import url(https://fonts.googleapis.com/css?family=Roboto\+Mono:300,500)
+@import url(https://fonts.googleapis.com/css?family=Roboto:100,300,500)
+@import url(https://fonts.googleapis.com/css?family=Roboto\+Mono:300)
 
 *
   margin: 0
@@ -72,6 +72,7 @@ h1
   color: white
   outline: 0
   margin-top: 18px
+  font-weight: 300
   &:hover
     background: rgba(white, 5%)
   &:active
@@ -81,7 +82,6 @@ h1
 
 code, textarea
   font-family: 'Roboto Mono', sans-serif
-  font-weight: 100
   font-size: .5rem
   line-height: 1.75
   tab-size: 2
@@ -139,9 +139,13 @@ code.hljs
     border-bottom: 1px solid darken(white, 10%)
     outline: 0
     padding: 0 10px
-    font-size: 1rem
+    font-size: .75rem
     height: 50px
     line-height: 50px
+    font-weight: 500
+    color: lighten(black, 30%)
+    &:placeholder-shown
+      font-weight: 300
   .btn-clipboard
     position: absolute
     right: 0
@@ -153,14 +157,15 @@ code.hljs
     border-top: 0
     border-right: 0
     background: darken(white, 5%)
-    color: darken(white, 40%)
+    color: darken(white, 50%)
     text-transform: uppercase
-    letter-spacing: .25em
     trans()
     outline: none
+    font-size: .65rem
+    letter-spacing: .15em
     cursor: pointer
     &:hover
-      background: darken(white, 7%)
+      background: darken(white, 6%)
     &:active
       background: darken(white, 10%)
 
@@ -201,14 +206,11 @@ code.hljs
 .hljs-string, .hljs-number
   cursor: pointer
   &.is-selected
-    background: lighten(yellow, 30%)
+    background: lighten(yellow, 50%)
   &:hover
     background: lighten(yellow, 75%)
     &.is-selected
-      background: lighten(yellow, 30%)
-
-.hljs-attr
-  font-weight: normal
+      background: lighten(yellow, 50%)
 
 .parse-field
   display: none
@@ -225,7 +227,6 @@ code.hljs
   color: white
   border: 1px solid rgba(tomato, 90%)
   font-size: .75rem
-  font-weight: normal
   text-align: center
   a
     color: white
