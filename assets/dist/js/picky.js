@@ -146,26 +146,34 @@ $('textarea').keydown(function (e) {
   }
 });
 
+var timeout = '';
+var debounceRequest = function debounceRequest(contents, timeout) {
+  timeout = setTimeout(function () {
+
+    $.ajax({
+      url: contents,
+      type: 'GET',
+      dataType: 'json',
+      success: function success(data) {
+        $('code').html(JSON.stringify(data, null, '\t'));
+        hljs.highlightBlock($('code')[0]);
+      },
+      error: function error() {
+        // Send textarea code to highlight.js <code> container
+        console.log('Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4');
+        $('code').html($('textarea').val());
+        hljs.highlightBlock($('code')[0]);
+      }
+    });
+  }, timeout);
+};
+
 // Test the input to see if it's a JSON url
 // If it is, populate <code> with that data
 // If it's not, populate <code> with whatever is in <textarea>
 $('textarea').keyup(function () {
-  var textareaContents = $('textarea').val().trim();
+  clearTimeout(timeout);
+  debounceRequest($('textarea').val().trim(), 1000);
   $('#picked').val('');
-  $.ajax({
-    url: textareaContents,
-    type: 'GET',
-    dataType: 'json',
-    success: function success(data) {
-      $('code').html(JSON.stringify(data, null, '\t'));
-      hljs.highlightBlock($('code')[0]);
-    },
-    error: function error() {
-      // Send textarea code to highlight.js <code> container
-      console.log('Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4');
-      $('code').html($('textarea').val());
-      hljs.highlightBlock($('code')[0]);
-    }
-  });
 });
 //# sourceMappingURL=picky.js.map

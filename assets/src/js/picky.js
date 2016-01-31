@@ -41,7 +41,7 @@ const searchObj = (searchTerm, object) => {
   let foundVal = ''
   let stopSearch = false
 
-  function search (searchTerm, object) {
+  function search(searchTerm, object) {
     let pointer
     for (var key in object) {
       if (typeof object[key] === 'object') {
@@ -67,7 +67,7 @@ const searchObj = (searchTerm, object) => {
   }
 }
 
-$(document).on('click', '.hljs-string, .hljs-number', function () {
+$(document).on('click', '.hljs-string, .hljs-number', function() {
   // Click highlight
   $('code *').removeClass('is-selected')
   $(this).addClass('is-selected')
@@ -111,7 +111,7 @@ $(window).on('resize', () =>
   $('textarea, .code-wrap').removeAttr('style')
 )
 
-$('textarea').keydown(function (e) {
+$('textarea').keydown(function(e) {
   // Allow insertion of tabs - http://stackoverflow.com/a/28483558/175825
   if (e.which === 9) {
     e.preventDefault()
@@ -142,25 +142,35 @@ $('textarea').keydown(function (e) {
   }
 })
 
+
+let timeout = '';
+const debounceRequest = (contents, timeout) => {
+  timeout = setTimeout(() => {
+
+    $.ajax({
+      url: contents,
+      type: 'GET',
+      dataType: 'json',
+      success: (data) => {
+        $('code').html(JSON.stringify(data, null, '\t'))
+        hljs.highlightBlock($('code')[0])
+      },
+      error: () => {
+        // Send textarea code to highlight.js <code> container
+        console.log(`Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4`)
+        $('code').html($('textarea').val())
+        hljs.highlightBlock($('code')[0])
+      }
+    })
+
+  }, timeout)
+}
+
 // Test the input to see if it's a JSON url
 // If it is, populate <code> with that data
 // If it's not, populate <code> with whatever is in <textarea>
 $('textarea').keyup(() => {
-  const textareaContents = $('textarea').val().trim()
+  clearTimeout(timeout)
+  debounceRequest($('textarea').val().trim(), 1000)
   $('#picked').val('')
-  $.ajax({
-    url: textareaContents,
-    type: 'GET',
-    dataType: 'json',
-    success: (data) => {
-      $('code').html(JSON.stringify(data, null, '\t'))
-      hljs.highlightBlock($('code')[0])
-    },
-    error: () => {
-      // Send textarea code to highlight.js <code> container
-      console.log(`Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4`)
-      $('code').html($('textarea').val())
-      hljs.highlightBlock($('code')[0])
-    }
-  })
 })
