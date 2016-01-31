@@ -100,7 +100,8 @@ $(document).on('mousemove touchmove', (e) => {
   if (document.querySelector('body').clientWidth >= 1000) {
     horizontalResize((e.pageX / document.querySelector('main').clientWidth) * 100)
   } else {
-    verticalResize(((e.pageY / document.querySelector('body').clientHeight) * 100) - 5)
+    verticalResize(((e.originalEvent.touches[0].pageY / document.querySelector('body').clientHeight) * 100) - 5)
+    return false
   }
 }).on('mouseup touchend', () =>
   resizing = false
