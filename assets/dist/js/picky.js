@@ -162,7 +162,7 @@ $('textarea').keyup(function () {
     },
     error: function error() {
       // Send textarea code to highlight.js <code> container
-      console.log('Sorry for spamming the crap out of your console! https://github.com/corysimmons/picky.json/issues/4');
+      console.log('Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4');
       $('code').html($('textarea').val());
       hljs.highlightBlock($('code')[0]);
     }
