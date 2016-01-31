@@ -74,10 +74,10 @@ var searchObj = function searchObj(searchTerm, object) {
 $(document).on('click', '.hljs-string, .hljs-number', function () {
   // Click highlight
   $('code *').removeClass('is-selected');
-  $(undefined).addClass('is-selected');
+  $(this).addClass('is-selected');
 
   // Find selector and display in disabled input field
-  var foundVal = searchObj($(undefined).text().replace(/[\"]/g, ''), $.parseJSON($('code').text()));
+  var foundVal = searchObj($(this).text().replace(/[\"]/g, ''), $.parseJSON($('code').text()));
   $('#picked').val(foundVal.path);
 });
 
@@ -119,10 +119,10 @@ $('textarea').keydown(function (e) {
   // Allow insertion of tabs - http://stackoverflow.com/a/28483558/175825
   if (e.which === 9) {
     e.preventDefault();
-    if (undefined.value) {
-      var val = undefined.value;
-      var start = undefined.selectionStart;
-      var end = undefined.selectionEnd;
+    if (this.value) {
+      var val = this.value;
+      var start = this.selectionStart;
+      var end = this.selectionEnd;
       var selected = val.substring(start, end);
       var re = '';
       var count = '';
@@ -130,18 +130,18 @@ $('textarea').keydown(function (e) {
       if (e.shiftKey) {
         re = /^\t/gm;
         count = -selected.match(re).length;
-        undefined.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end);
+        this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end);
       } else {
         re = /^/gm;
         count = selected.match(re).length;
-        undefined.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end);
+        this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end);
       }
       if (start === end) {
-        undefined.selectionStart = end + count;
+        this.selectionStart = end + count;
       } else {
-        undefined.selectionStart = start;
+        this.selectionStart = start;
       }
-      undefined.selectionEnd = end + count;
+      this.selectionEnd = end + count;
     }
   }
 });

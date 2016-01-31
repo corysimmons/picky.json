@@ -67,7 +67,7 @@ const searchObj = (searchTerm, object) => {
   }
 }
 
-$(document).on('click', '.hljs-string, .hljs-number', () => {
+$(document).on('click', '.hljs-string, .hljs-number', function () {
   // Click highlight
   $('code *').removeClass('is-selected')
   $(this).addClass('is-selected')
@@ -111,7 +111,7 @@ $(window).on('resize', () =>
   $('textarea, .code-wrap').removeAttr('style')
 )
 
-$('textarea').keydown((e) => {
+$('textarea').keydown(function (e) {
   // Allow insertion of tabs - http://stackoverflow.com/a/28483558/175825
   if (e.which === 9) {
     e.preventDefault()
