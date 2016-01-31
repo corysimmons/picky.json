@@ -159,6 +159,7 @@ code {
 }
 code.hljs {
   padding: 15px !important;
+  overflow: scroll !important;
 }
 .grab {
   height: 50px;
