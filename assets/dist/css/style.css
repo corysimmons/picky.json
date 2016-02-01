@@ -102,9 +102,7 @@ textarea {
   -moz-tab-size: 2;
     -o-tab-size: 2;
        tab-size: 2;
-}
-code {
-  font-size: 0.5rem;
+  font-size: 0.75rem;
 }
 main {
   height: calc(100vh - 60px);
@@ -128,7 +126,6 @@ textarea {
   outline: 0;
   resize: none;
   padding: 15px;
-  font-size: 0.75rem;
 }
 @media (min-width: 1000px) {
   textarea {
