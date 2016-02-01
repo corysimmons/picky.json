@@ -1,18 +1,18 @@
 <h1 align="center">picky.json</h1>
 
 <p align="center">
-  :sparkles: Dump JSON. Click value. Get selector. :sparkles:
+  :sparkles: Dump JSON. Click something. Get selector. :sparkles:
 </p>
 
 ### Usage
 - Go to [pickyjson.com](http://pickyjson.com)
 - Input **[valid JSON](http://jsonlint.com/)** or input a URL that returns valid JSON
-- Click a value in the JSON on the right
+- Click anything in the JSON on the right
 - Copy and enjoy the selector
 - Tell your friends
 
 ### Credits
-- [Dan Ford](https://github.com/danjford) created the JSON traversal function (the important part)
+- [Dan Ford](https://github.com/danjford) created all the important stuff
 - [Cory Simmons](https://github.com/corysimmons) created the rest
 - [Puppet Scientists](http://puppetscientists.com/) created the magnifying glass logo which is available on [flaticon.com](http://www.flaticon.com/)
 
