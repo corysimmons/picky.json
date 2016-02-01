@@ -36,7 +36,7 @@ const formatSelected = (path) => {
 }
 
 const unformatSelected = (path) => {
-  return path.replace(/\.([0-9]+)/g, '[$1').replace(/([0-9]+)\./g, '$1].').replace(/\.$/, '').replace(/(\[[0-9]*$)/, '$1]')
+  return path.replace(/\.([0-9]+)/g, '[$1').replace(/([0-9]+)\./g, '$1].').replace(/\.$/, '').replace(/(\[[0-9]*$)/, '$1]').replace(/(^[0-9]*\])/, '[$1')
 }
 
 main.on('showPath', function (el, path) {
