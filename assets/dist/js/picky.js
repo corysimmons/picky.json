@@ -11,6 +11,10 @@ Ractive.defaults.data.pickyLengthCheck = function (keypath, index) {
   return index < length - 1;
 };
 
+Ractive.defaults.data.inArrayCheck = function (keypath, index) {
+  return !Array.isArray(this.get(keypath.replace(/\.[0-9]*$/, '')));
+};
+
 Ractive.DEBUG = false;
 
 var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
