@@ -29,13 +29,21 @@ var input = new Ractive({
   }
 });
 
+var formatSelected = function formatSelected(path) {
+  return path.replace(/\[/g, '.').replace(/\]\.?/g, '.').replace(/\.$/, '');
+};
+
+var unformatSelected = function unformatSelected(path) {
+  return path.replace(/\.([0-9]+)/g, '[$1').replace(/([0-9]+)\./g, '$1].').replace(/\.$/, '');
+};
+
 main.on('showPath', function (el, path) {
   this.set('pickyIsSelected', path);
-  input.set('path', path.replace(/^data./, ''));
+  input.set('path', unformatSelected(path.replace(/^data./, '')));
 });
 
 input.on('highlight', function (el, value) {
-  main.set('pickyIsSelected', 'data.' + value);
+  main.set('pickyIsSelected', 'data.' + formatSelected(value));
 });
 
 // Test if JSON is valid and trigger notification if it's not
