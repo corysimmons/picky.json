@@ -1,14 +1,41 @@
-/* global $, Clipboard, hljs */
+// /* global $, Clipboard, hljs */
 
-// Activate clipboard
-const clipboard = new Clipboard('.btn-clipboard') // Stop crying Firefox!
-clipboard // stop crying StandardJS!
+// Adds the commas after the attributes in the JSON
+Ractive.defaults.data.pickyLengthCheck = function(keypath, index) {
+  const items = this.get(keypath.replace(/\.[a-z\_0-9]*$/gi, ''))
+  const length = Array.isArray(items) ? items.length : Object.keys(items).length
+  return index < length - 1
+}
+
+const main = new Ractive({
+  el: '#outlet',
+  template: '#recurse'
+})
+
+const input = new Ractive({
+  el: '.grab',
+  template: '#grab',
+  onrender: () => {
+    // Activate clipboard
+    const clipboard = new Clipboard('.btn-clipboard') // Stop crying Firefox!
+    clipboard // stop crying StandardJS!
+  }
+})
+
+main.on('showPath', function(el, path) {
+  this.set('pickyIsSelected', path);
+  input.set('path', path)
+})
+
+input.on('highlight', function(el, value) {
+  main.set('pickyIsSelected', value);
+})
 
 // Test if JSON is valid and trigger notification if it's not
 const validNotification = () => {
   if ($('textarea').val() !== '') {
     try {
-      $.parseJSON($('code').text())
+      $.parseJSON(JSON.stringify(main.get()))
       $('.invalid-json').fadeOut()
     } catch (err) {
       $('.invalid-json').fadeIn()
@@ -27,54 +54,11 @@ $('.btn-example').click(() => {
     url: 'https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco',
     success: (data) => {
       $('textarea').text('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco')
-      $('code').html(data)
-      hljs.highlightBlock($('code')[0])
+      main.set('pickyIsSelected', '');
+      main.set(JSON.parse(data))
     },
     dataType: 'text'
   })
-})
-
-// Traverse the object and sift out the selector
-// Courtesy of https://github.com/danjford
-const searchObj = (searchTerm, object) => {
-  let path = []
-  let foundVal = ''
-  let stopSearch = false
-
-  function search(searchTerm, object) {
-    let pointer
-    for (var key in object) {
-      if (typeof object[key] === 'object') {
-        if (!stopSearch) {
-          pointer = key
-          search(searchTerm, object[key])
-        }
-      } else if (object[key].toString().indexOf(searchTerm.toString()) > -1) {
-        pointer = key
-        foundVal = object[key]
-        stopSearch = true
-      }
-      if (stopSearch) break
-    }
-    if (stopSearch) {
-      path.push(isNaN(pointer) ? pointer : `[${pointer}]`)
-    }
-  }
-  search(searchTerm, object)
-  return {
-    value: foundVal,
-    path: path.reverse().join('.').replace(/\.\[/g, '[').replace(/\.$/, '')
-  }
-}
-
-$(document).on('click', '.hljs-string, .hljs-number', function() {
-  // Click highlight
-  $('code *').removeClass('is-selected')
-  $(this).addClass('is-selected')
-
-  // Find selector and display in disabled input field
-  const foundVal = searchObj($(this).text().replace(/[\"]/g, ''), $.parseJSON($('code').text()))
-  $('#picked').val(foundVal.path)
 })
 
 // Resize panels
@@ -100,7 +84,7 @@ $(document).on('mousemove touchmove', (e) => {
   if (document.querySelector('body').clientWidth >= 1000) {
     horizontalResize((e.pageX / document.querySelector('main').clientWidth) * 100)
   } else {
-    verticalResize(((e.originalEvent.touches[0].pageY / document.querySelector('body').clientHeight) * 100) - 5)
+    verticalResize((((e.originalEvent.pageY || e.originalEvent.touches[0].pageY) / document.querySelector('body').clientHeight) * 100) - 5)
     return false
   }
 }).on('mouseup touchend', () =>
@@ -112,37 +96,19 @@ $(window).on('resize', () =>
   $('textarea, .code-wrap').removeAttr('style')
 )
 
-$('textarea').keydown(function(e) {
-  // Allow insertion of tabs - http://stackoverflow.com/a/28483558/175825
+$('textarea').on('keydown', (e) => {
   if (e.which === 9) {
     e.preventDefault()
-    if (this.value) {
-      const val = this.value
-      const start = this.selectionStart
-      const end = this.selectionEnd
-      const selected = val.substring(start, end)
-      let re = ''
-      let count = ''
-
-      if (e.shiftKey) {
-        re = /^\t/gm
-        count = -selected.match(re).length
-        this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end)
-      } else {
-        re = /^/gm
-        count = selected.match(re).length
-        this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end)
-      }
-      if (start === end) {
-        this.selectionStart = end + count
-      } else {
-        this.selectionStart = start
-      }
-      this.selectionEnd = end + count
+  }
+}).on('keyup', function() {
+  try {
+    main.set(JSON.parse($(this).val()))
+  } catch (error) {
+    if (!$(this).val().length) {
+      main.reset()
     }
   }
 })
-
 
 let timeout = '';
 const debounceRequest = (contents, timeout) => {
@@ -153,14 +119,12 @@ const debounceRequest = (contents, timeout) => {
       type: 'GET',
       dataType: 'json',
       success: (data) => {
-        $('code').html(JSON.stringify(data, null, '\t'))
-        hljs.highlightBlock($('code')[0])
+        main.set(data)
       },
       error: () => {
         // Send textarea code to highlight.js <code> container
         console.log(`Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4`)
-        $('code').html($('textarea').val())
-        hljs.highlightBlock($('code')[0])
+        main.set($('textarea').val())
       }
     })
 
@@ -171,7 +135,15 @@ const debounceRequest = (contents, timeout) => {
 // If it is, populate <code> with that data
 // If it's not, populate <code> with whatever is in <textarea>
 $('textarea').keyup(() => {
+  const expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
+  const regex = new RegExp(expression)
+  let url = $('textarea').val().trim()
+
   clearTimeout(timeout)
-  debounceRequest($('textarea').val().trim(), 1000)
+  if (url.match(regex)) {
+    debounceRequest(url, 1000)
+  }
+
   $('#picked').val('')
+
 })
