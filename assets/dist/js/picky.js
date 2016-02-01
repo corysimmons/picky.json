@@ -37,7 +37,7 @@ input.on('highlight', function (el, value) {
 var validNotification = function validNotification() {
   if ($('textarea').val() !== '') {
     try {
-      $.parseJSON(JSON.stringify(main.get()));
+      $.parseJSON($('textarea').val());
       $('.invalid-json').fadeOut();
     } catch (err) {
       $('.invalid-json').fadeIn();
