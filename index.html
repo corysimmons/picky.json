@@ -31,7 +31,7 @@
         <div class="grab">
 
         </div>
-        <pre><code class="json hljs">{<div id="outlet"></div>}</code></pre>
+        <pre><code class="json hljs"></code></pre>
         <div class="invalid-json">
           <p>
             JSON isn't valid. Picky won't work.
@@ -41,29 +41,32 @@
       </div>
     </main>
 
+    <script id="main" type="text/ractive">
+      {{#if data}}
+        {<div>{{>recurse data}}</div>}
+      {{/if}}
+    </script>
 
     <script id="recurse" type="text/ractive">
       {{#each this}}
         {{#if @key !== 'pickyIsSelected' && @key !== 'pickyLengthCheck'}}
-        <div class="parent">
-          <span class="hljs-attr">
-            {{#if @keypath.split('.')[@keypath.split('.').length -1] != @index}}
-              "{{@key}}":
-            {{/if}}
-          </span>
-          {{#if typeof this === 'object'}}
-            {{#if Array.isArray(this)}}
-              {{> array}}
+          <div class="parent">
+            <span class="hljs-attr">
+              {{#if @keypath.split('.')[@keypath.split('.').length -1] != @index}}
+                "{{@key}}":
+              {{/if}}
+            </span>
+            {{#if typeof this === 'object'}}
+              {{#if Array.isArray(this)}}
+                {{> array}}
+              {{else}}
+                {{> object}}
+              {{/if}}
             {{else}}
-              {{> object}}
+              <span class="{{#if typeof this == 'string'}}hljs-string{{else}}hljs-number{{/if}} {{~/pickyIsSelected === @keypath ? 'is-selected' : ''}}" on-click="showPath:{{@keypath}}">
+                {{#if typeof this == 'string'}}"{{this}}"{{else}}{{this}}{{/if}}{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
+              </span>
             {{/if}}
-          {{else}}
-            <span class="{{#if typeof this == 'string'}}hljs-string{{else}}hljs-number{{/if}} {{~/pickyIsSelected === @keypath ? 'is-selected' : ''}}" on-click="showPath:{{@keypath}}">
-
-              {{#if typeof this == 'string'}}"{{this}}"{{else}}{{this}}{{/if}}
-
-            </span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
-          {{/if}}
           </div>
         {{/if}}
       {{/each}}
@@ -72,13 +75,13 @@
     <script id="array" type="text/ractive">
       <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">[</span>
         {{> recurse}}
-      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">]</span>
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">]</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
     </script>
 
     <script id="object" type="text/ractive">
       <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">{</span>
         {{> recurse}}
-      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">}</span>
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">}</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
     </script>
 
     <script id="grab" type="text/ractive">

@@ -15,8 +15,8 @@ var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@
 var regex = new RegExp(expression);
 
 var main = new Ractive({
-  el: '#outlet',
-  template: '#recurse'
+  el: '.json',
+  template: '#main'
 });
 
 var input = new Ractive({
@@ -62,7 +62,7 @@ $('.btn-example').click(function () {
     success: function success(data) {
       $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco');
       main.set('pickyIsSelected', '');
-      main.set(JSON.parse(data));
+      main.reset({ data: JSON.parse(data) });
     },
     dataType: 'text'
   });
@@ -133,7 +133,7 @@ $('textarea').on('keydown', function (e) {
   }
 }).on('keyup', function () {
   try {
-    main.reset(JSON.parse($(this).val()));
+    main.reset({ data: JSON.parse($(this).val()) });
   } catch (error) {
     if (!$(this).val().length) {
       main.reset();
