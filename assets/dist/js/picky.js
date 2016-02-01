@@ -34,7 +34,7 @@ var formatSelected = function formatSelected(path) {
 };
 
 var unformatSelected = function unformatSelected(path) {
-  return path.replace(/\.([0-9]+)/g, '[$1').replace(/([0-9]+)\./g, '$1].').replace(/\.$/, '');
+  return path.replace(/\.([0-9]+)/g, '[$1').replace(/([0-9]+)\./g, '$1].').replace(/\.$/, '').replace(/(\[[0-9]*$)/, '$1]');
 };
 
 main.on('showPath', function (el, path) {
