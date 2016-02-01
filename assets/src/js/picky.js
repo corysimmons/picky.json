@@ -7,6 +7,8 @@ Ractive.defaults.data.pickyLengthCheck = function(keypath, index) {
   return index < length - 1
 }
 
+Ractive.DEBUG = false
+
 const expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
 const regex = new RegExp(expression)
 
@@ -99,9 +101,33 @@ $(window).on('resize', () =>
   $('textarea, .code-wrap').removeAttr('style')
 )
 
-$('textarea').on('keydown', (e) => {
+$('textarea').on('keydown', function(e) {
   if (e.which === 9) {
     e.preventDefault()
+    if (this.value) {
+      const val = this.value
+      const start = this.selectionStart
+      const end = this.selectionEnd
+      const selected = val.substring(start, end)
+      let re = ''
+      let count = ''
+
+      if (e.shiftKey) {
+        re = /^\t/gm
+        count = -selected.match(re).length
+        this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end)
+      } else {
+        re = /^/gm
+        count = selected.match(re).length
+        this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end)
+      }
+      if (start === end) {
+        this.selectionStart = end + count
+      } else {
+        this.selectionStart = start
+      }
+      this.selectionEnd = end + count
+    }
   }
 }).on('keyup', function() {
   try {
