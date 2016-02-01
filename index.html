@@ -50,11 +50,7 @@
     <script id="recurse" type="text/ractive">
       {{#each this}}
         <div class="parent">
-          <span class="hljs-attr">
-            {{#if @keypath.split('.')[@keypath.split('.').length -1] != @index}}
-              "{{@key}}":
-            {{/if}}
-          </span>
+          <span class="hljs-attr{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">{{#if @keypath.split('.')[@keypath.split('.').length -1] != @index}}"{{@key}}"{{/if}}</span>:
           {{#if typeof this === 'object'}}
             {{#if Array.isArray(this)}}
               {{> array}}
