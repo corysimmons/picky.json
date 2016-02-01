@@ -60,7 +60,9 @@ $('.btn-example').click(() => {
     success: (data) => {
       $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco')
       main.set('pickyIsSelected', '');
-      main.reset({data: JSON.parse(data)})
+      main.reset({
+        data: JSON.parse(data)
+      })
     },
     dataType: 'text'
   })
@@ -128,7 +130,9 @@ $('textarea').on('keydown', function(e) {
   }
 }).on('keyup', function() {
   try {
-    main.reset({data: JSON.parse($(this).val())})
+    main.reset({
+      data: JSON.parse($(this).val())
+    })
   } catch (error) {
     if (!$(this).val().length) {
       main.reset()
