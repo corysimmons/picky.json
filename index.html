@@ -58,7 +58,11 @@
               {{> object}}
             {{/if}}
           {{else}}
-            <span class="hljs-string{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">{{this}}</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
+            <span class="{{#if typeof this == 'string'}}hljs-string{{else}}hljs-number{{/if}} {{~/pickyIsSelected === @keypath ? 'is-selected' : ''}}" on-click="showPath:{{@keypath}}">
+
+              {{#if typeof this == 'string'}}"{{this}}"{{else}}{{this}}{{/if}}
+
+            </span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
           {{/if}}
           </div>
         {{/if}}
