@@ -67,14 +67,21 @@ $('.btn-example').click(() => {
 })
 
 // Resize panels
+const maxHoriz = 10
+const maxVert = 20
+
 const horizontalResize = (offset) => {
-  $('textarea').css('width', offset + '%')
-  $('.code-wrap').css('width', (100 - offset) + '%')
+  if (100 - offset > maxHoriz && offset > maxHoriz) {
+    $('textarea').css('width', offset + '%')
+    $('.code-wrap').css('width', (100 - offset) + '%')
+  }
 }
 
 const verticalResize = (offset) => {
-  $('textarea').css('height', offset + '%')
-  $('.code-wrap').css('height', (100 - offset) + '%')
+  if (100 - offset > maxVert && offset > maxVert) {
+    $('textarea').css('height', offset + '%')
+    $('.code-wrap').css('height', (100 - offset) + '%')
+  }
 }
 
 let resizing = false

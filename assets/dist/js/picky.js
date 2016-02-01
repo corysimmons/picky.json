@@ -69,14 +69,21 @@ $('.btn-example').click(function () {
 });
 
 // Resize panels
+var maxHoriz = 10;
+var maxVert = 20;
+
 var horizontalResize = function horizontalResize(offset) {
-  $('textarea').css('width', offset + '%');
-  $('.code-wrap').css('width', 100 - offset + '%');
+  if (100 - offset > maxHoriz && offset > maxHoriz) {
+    $('textarea').css('width', offset + '%');
+    $('.code-wrap').css('width', 100 - offset + '%');
+  }
 };
 
 var verticalResize = function verticalResize(offset) {
-  $('textarea').css('height', offset + '%');
-  $('.code-wrap').css('height', 100 - offset + '%');
+  if (100 - offset > maxVert && offset > maxVert) {
+    $('textarea').css('height', offset + '%');
+    $('.code-wrap').css('height', 100 - offset + '%');
+  }
 };
 
 var resizing = false;
