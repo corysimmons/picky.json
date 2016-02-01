@@ -29,10 +29,9 @@
           <div class="holder"></div>
         </div>
         <div class="grab">
-          <input id="picked" type="text" placeholder="Click a value from your JSON">
-          <button class="btn-clipboard" data-clipboard-target="#picked">Copy</button>
+
         </div>
-        <pre><code class="json"></code></pre>
+        <pre><code class="json hljs"></code></pre>
         <div class="invalid-json">
           <p>
             JSON isn't valid. Picky won't work.
@@ -42,10 +41,52 @@
       </div>
     </main>
 
+    <script id="main" type="text/ractive">
+      {{#if data}}
+        {<div>{{>recurse data}}</div>}
+      {{/if}}
+    </script>
+
+    <script id="recurse" type="text/ractive">
+      {{#each this}}
+        <div class="parent">
+          {{#if @keypath.split('.')[@keypath.split('.').length -1] != @index}}
+            <span class="hljs-attr{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">"{{@key}}"</span>:
+          {{/if}}
+          {{#if typeof this === 'object'}}
+            {{#if Array.isArray(this)}}
+              {{> array}}
+            {{else}}
+              {{> object}}
+            {{/if}}
+          {{else}}
+            <span class="{{#if typeof this == 'string'}}hljs-string{{else}}hljs-number{{/if}} {{~/pickyIsSelected === @keypath ? 'is-selected' : ''}}" on-click="showPath:{{@keypath}}">{{#if typeof this == 'string'}}"{{this}}"{{else}}{{this}}{{/if}}</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
+          {{/if}}
+        </div>
+      {{/each}}
+    </script>
+
+    <script id="array" type="text/ractive">
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">[</span>
+        {{> recurse}}
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">]</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
+    </script>
+
+    <script id="object" type="text/ractive">
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">{</span>
+        {{> recurse}}
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">}</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
+    </script>
+
+    <script id="grab" type="text/ractive">
+      <input id="picked" type="text" class="input" placeholder="Click a value from your JSON or search for it!" value="{{path}}" on-keyup="highlight:{{path}}"/>
+      <button class="btn-clipboard" data-clipboard-target="#picked">Copy</button>
+    </script>
+
     <div class="parse-field"></div>
 
     <script src="assets/dist/js/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+    <script src="assets/dist/js/ractive.js"></script>
     <script src="assets/dist/js/clipboard.js"></script>
     <script src="assets/dist/js/picky.js"></script>
     <script src="assets/dist/js/analytics.js"></script>

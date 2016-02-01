@@ -247,23 +247,34 @@ code.hljs {
   }
 }
 .hljs-string,
-.hljs-number {
+.hljs-number,
+.hljs-wrap,
+.hljs-attr {
   cursor: pointer;
 }
 .hljs-string.is-selected,
-.hljs-number.is-selected {
+.hljs-number.is-selected,
+.hljs-wrap.is-selected,
+.hljs-attr.is-selected {
   background: #ffff80;
 }
 .hljs-string:hover,
-.hljs-number:hover {
+.hljs-number:hover,
+.hljs-wrap:hover,
+.hljs-attr:hover {
   background: #ffffbf;
 }
 .hljs-string:hover.is-selected,
-.hljs-number:hover.is-selected {
+.hljs-number:hover.is-selected,
+.hljs-wrap:hover.is-selected,
+.hljs-attr:hover.is-selected {
   background: #ffff80;
 }
 .parse-field {
   display: none;
+}
+.parent {
+  padding-left: 10px;
 }
 .invalid-json {
   display: none;

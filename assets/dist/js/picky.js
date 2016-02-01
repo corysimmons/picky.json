@@ -1,18 +1,56 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+// /* global $, Clipboard, hljs */
 
-/* global $, Clipboard, hljs */
+// Adds the commas after the attributes in the JSON
+Ractive.defaults.data.pickyLengthCheck = function (keypath, index) {
+  var items = this.get(keypath.replace(/\.[a-z\_0-9]*$/gi, ''));
+  var length = Array.isArray(items) ? items.length : Object.keys(items).length;
+  return index < length - 1;
+};
 
-// Activate clipboard
-var clipboard = new Clipboard('.btn-clipboard'); // Stop crying Firefox!
-clipboard; // stop crying StandardJS!
+Ractive.DEBUG = false;
+
+var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+var regex = new RegExp(expression);
+
+var main = new Ractive({
+  el: '.json',
+  template: '#main'
+});
+
+var input = new Ractive({
+  el: '.grab',
+  template: '#grab',
+  onrender: function onrender() {
+    // Activate clipboard
+    var clipboard = new Clipboard('.btn-clipboard'); // Stop crying Firefox!
+    clipboard; // stop crying StandardJS!
+  }
+});
+
+var formatSelected = function formatSelected(path) {
+  return path.replace(/\[/g, '.').replace(/\]\.?/g, '.').replace(/\.$/, '');
+};
+
+var unformatSelected = function unformatSelected(path) {
+  return path.replace(/\.([0-9]+)/g, '[$1').replace(/([0-9]+)\./g, '$1].').replace(/\.$/, '');
+};
+
+main.on('showPath', function (el, path) {
+  this.set('pickyIsSelected', path);
+  input.set('path', unformatSelected(path.replace(/^data./, '')));
+});
+
+input.on('highlight', function (el, value) {
+  main.set('pickyIsSelected', 'data.' + formatSelected(value));
+});
 
 // Test if JSON is valid and trigger notification if it's not
 var validNotification = function validNotification() {
-  if ($('textarea').val() !== '') {
+  if ($('textarea').val() !== '' && !$('textarea').val().match(regex)) {
     try {
-      $.parseJSON($('code').text());
+      $.parseJSON($('textarea').val());
       $('.invalid-json').fadeOut();
     } catch (err) {
       $('.invalid-json').fadeIn();
@@ -30,66 +68,22 @@ $('.btn-example').click(function () {
   $.ajax({
     url: 'https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco',
     success: function success(data) {
-      $('textarea').text('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco');
-      $('code').html(data);
-      hljs.highlightBlock($('code')[0]);
+      $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco');
+      main.set('pickyIsSelected', '');
+      main.reset({
+        data: JSON.parse(data)
+      });
     },
     dataType: 'text'
   });
 });
 
-// Traverse the object and sift out the selector
-// Courtesy of https://github.com/danjford
-var searchObj = function searchObj(searchTerm, object) {
-  var path = [];
-  var foundVal = '';
-  var stopSearch = false;
-
-  function search(searchTerm, object) {
-    var pointer = undefined;
-    for (var key in object) {
-      if (_typeof(object[key]) === 'object') {
-        if (!stopSearch) {
-          pointer = key;
-          search(searchTerm, object[key]);
-        }
-      } else if (object[key].toString().indexOf(searchTerm.toString()) > -1) {
-        pointer = key;
-        foundVal = object[key];
-        stopSearch = true;
-      }
-      if (stopSearch) break;
-    }
-    if (stopSearch) {
-      path.push(isNaN(pointer) ? pointer : '[' + pointer + ']');
-    }
-  }
-  search(searchTerm, object);
-  return {
-    value: foundVal,
-    path: path.reverse().join('.').replace(/\.\[/g, '[').replace(/\.$/, '')
-  };
-};
-
-$(document).on('click', '.hljs-string, .hljs-number', function () {
-  // Click highlight
-  $('code *').removeClass('is-selected');
-  $(this).addClass('is-selected');
-
-  // Find selector and display in disabled input field
-  var foundVal = searchObj($(this).text().replace(/[\"]/g, ''), $.parseJSON($('code').text()));
-  $('#picked').val(foundVal.path);
-});
-
 // Resize panels
-var horizontalResize = function horizontalResize(offset) {
-  $('textarea').css('width', offset + '%');
-  $('.code-wrap').css('width', 100 - offset + '%');
-};
-
-var verticalResize = function verticalResize(offset) {
-  $('textarea').css('height', offset + '%');
-  $('.code-wrap').css('height', 100 - offset + '%');
+var resizer = function resizer(offset, field, max) {
+  if (100 - offset > max && offset > max) {
+    $('textarea').css(field, offset + '%');
+    $('.code-wrap').css(field, 100 - offset + '%');
+  }
 };
 
 var resizing = false;
@@ -102,9 +96,9 @@ $(document).on('mousemove touchmove', function (e) {
     return;
   }
   if (document.querySelector('body').clientWidth >= 1000) {
-    horizontalResize(e.pageX / document.querySelector('main').clientWidth * 100);
+    resizer(e.pageX / document.querySelector('main').clientWidth * 100, 'width', 10);
   } else {
-    verticalResize(e.originalEvent.touches[0].pageY / document.querySelector('body').clientHeight * 100 - 5);
+    resizer((e.originalEvent.pageY || e.originalEvent.touches[0].pageY) / document.querySelector('body').clientHeight * 100 - 5, 'height', 20);
     return false;
   }
 }).on('mouseup touchend', function () {
@@ -116,8 +110,7 @@ $(window).on('resize', function () {
   return $('textarea, .code-wrap').removeAttr('style');
 });
 
-$('textarea').keydown(function (e) {
-  // Allow insertion of tabs - http://stackoverflow.com/a/28483558/175825
+$('textarea').on('keydown', function (e) {
   if (e.which === 9) {
     e.preventDefault();
     if (this.value) {
@@ -145,6 +138,16 @@ $('textarea').keydown(function (e) {
       this.selectionEnd = end + count;
     }
   }
+}).on('keyup', function () {
+  try {
+    main.reset({
+      data: JSON.parse($(this).val())
+    });
+  } catch (error) {
+    if (!$(this).val().length) {
+      main.reset();
+    }
+  }
 });
 
 var timeout = '';
@@ -156,14 +159,12 @@ var debounceRequest = function debounceRequest(contents, timeout) {
       type: 'GET',
       dataType: 'json',
       success: function success(data) {
-        $('code').html(JSON.stringify(data, null, '\t'));
-        hljs.highlightBlock($('code')[0]);
+        main.set(data);
       },
       error: function error() {
         // Send textarea code to highlight.js <code> container
         console.log('Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4');
-        $('code').html($('textarea').val());
-        hljs.highlightBlock($('code')[0]);
+        main.set($('textarea').val());
       }
     });
   }, timeout);
@@ -173,8 +174,13 @@ var debounceRequest = function debounceRequest(contents, timeout) {
 // If it is, populate <code> with that data
 // If it's not, populate <code> with whatever is in <textarea>
 $('textarea').keyup(function () {
+  var url = $('textarea').val().trim();
+
   clearTimeout(timeout);
-  debounceRequest($('textarea').val().trim(), 1000);
+  if (url.match(regex)) {
+    debounceRequest(url, 1000);
+  }
+
   $('#picked').val('');
 });
 //# sourceMappingURL=picky.js.map
