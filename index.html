@@ -49,26 +49,24 @@
 
     <script id="recurse" type="text/ractive">
       {{#each this}}
-        {{#if @key !== 'pickyIsSelected' && @key !== 'pickyLengthCheck'}}
-          <div class="parent">
-            <span class="hljs-attr">
-              {{#if @keypath.split('.')[@keypath.split('.').length -1] != @index}}
-                "{{@key}}":
-              {{/if}}
-            </span>
-            {{#if typeof this === 'object'}}
-              {{#if Array.isArray(this)}}
-                {{> array}}
-              {{else}}
-                {{> object}}
-              {{/if}}
-            {{else}}
-              <span class="{{#if typeof this == 'string'}}hljs-string{{else}}hljs-number{{/if}} {{~/pickyIsSelected === @keypath ? 'is-selected' : ''}}" on-click="showPath:{{@keypath}}">
-                {{#if typeof this == 'string'}}"{{this}}"{{else}}{{this}}{{/if}}{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
-              </span>
+        <div class="parent">
+          <span class="hljs-attr">
+            {{#if @keypath.split('.')[@keypath.split('.').length -1] != @index}}
+              "{{@key}}":
             {{/if}}
-          </div>
-        {{/if}}
+          </span>
+          {{#if typeof this === 'object'}}
+            {{#if Array.isArray(this)}}
+              {{> array}}
+            {{else}}
+              {{> object}}
+            {{/if}}
+          {{else}}
+            <span class="{{#if typeof this == 'string'}}hljs-string{{else}}hljs-number{{/if}} {{~/pickyIsSelected === @keypath ? 'is-selected' : ''}}" on-click="showPath:{{@keypath}}">
+              {{#if typeof this == 'string'}}"{{this}}"{{else}}{{this}}{{/if}}{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
+            </span>
+          {{/if}}
+        </div>
       {{/each}}
     </script>
 
