@@ -67,20 +67,10 @@ $('.btn-example').click(() => {
 })
 
 // Resize panels
-const maxHoriz = 10
-const maxVert = 20
-
-const horizontalResize = (offset) => {
-  if (100 - offset > maxHoriz && offset > maxHoriz) {
-    $('textarea').css('width', offset + '%')
-    $('.code-wrap').css('width', (100 - offset) + '%')
-  }
-}
-
-const verticalResize = (offset) => {
-  if (100 - offset > maxVert && offset > maxVert) {
-    $('textarea').css('height', offset + '%')
-    $('.code-wrap').css('height', (100 - offset) + '%')
+const resizer = (offset, field, max) => {
+  if (100 - offset > max && offset > max) {
+    $('textarea').css(field, offset + '%')
+    $('.code-wrap').css(field, (100 - offset) + '%')
   }
 }
 
@@ -94,9 +84,9 @@ $(document).on('mousemove touchmove', (e) => {
     return
   }
   if (document.querySelector('body').clientWidth >= 1000) {
-    horizontalResize((e.pageX / document.querySelector('main').clientWidth) * 100)
+    resizer((e.pageX / document.querySelector('main').clientWidth) * 100, 'width', 10)
   } else {
-    verticalResize((((e.originalEvent.pageY || e.originalEvent.touches[0].pageY) / document.querySelector('body').clientHeight) * 100) - 5)
+    resizer((((e.originalEvent.pageY || e.originalEvent.touches[0].pageY) / document.querySelector('body').clientHeight) * 100) - 5, 'height', 20)
     return false
   }
 }).on('mouseup touchend', () =>

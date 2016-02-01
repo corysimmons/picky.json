@@ -69,20 +69,10 @@ $('.btn-example').click(function () {
 });
 
 // Resize panels
-var maxHoriz = 10;
-var maxVert = 20;
-
-var horizontalResize = function horizontalResize(offset) {
-  if (100 - offset > maxHoriz && offset > maxHoriz) {
-    $('textarea').css('width', offset + '%');
-    $('.code-wrap').css('width', 100 - offset + '%');
-  }
-};
-
-var verticalResize = function verticalResize(offset) {
-  if (100 - offset > maxVert && offset > maxVert) {
-    $('textarea').css('height', offset + '%');
-    $('.code-wrap').css('height', 100 - offset + '%');
+var resizer = function resizer(offset, field, max) {
+  if (100 - offset > max && offset > max) {
+    $('textarea').css(field, offset + '%');
+    $('.code-wrap').css(field, 100 - offset + '%');
   }
 };
 
@@ -96,9 +86,9 @@ $(document).on('mousemove touchmove', function (e) {
     return;
   }
   if (document.querySelector('body').clientWidth >= 1000) {
-    horizontalResize(e.pageX / document.querySelector('main').clientWidth * 100);
+    resizer(e.pageX / document.querySelector('main').clientWidth * 100, 'width', 10);
   } else {
-    verticalResize((e.originalEvent.pageY || e.originalEvent.touches[0].pageY) / document.querySelector('body').clientHeight * 100 - 5);
+    resizer((e.originalEvent.pageY || e.originalEvent.touches[0].pageY) / document.querySelector('body').clientHeight * 100 - 5, 'height', 20);
     return false;
   }
 }).on('mouseup touchend', function () {
