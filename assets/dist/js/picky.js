@@ -60,7 +60,7 @@ $('.btn-example').click(function () {
   $.ajax({
     url: 'https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco',
     success: function success(data) {
-      $('textarea').text('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco');
+      $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco');
       main.set('pickyIsSelected', '');
       main.set(JSON.parse(data));
     },
