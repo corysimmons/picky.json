@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 /* global Ractive, $, Clipboard */
 
 // Adds the commas after the attributes in the JSON
@@ -158,7 +160,9 @@ var debounceRequest = function debounceRequest(contents, timeout) {
       type: 'GET',
       dataType: 'json',
       success: function success(data) {
-        main.set(data);
+        main.reset({
+          data: (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' ? data : JSON.parse(data)
+        });
       },
       error: function error() {
         // Send textarea code to highlight.js <code> container

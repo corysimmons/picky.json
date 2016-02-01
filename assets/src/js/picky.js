@@ -156,7 +156,9 @@ const debounceRequest = (contents, timeout) => {
       type: 'GET',
       dataType: 'json',
       success: (data) => {
-        main.set(data)
+        main.reset({
+          data: typeof data === 'object' ? data : JSON.parse(data)
+        })
       },
       error: () => {
         // Send textarea code to highlight.js <code> container
