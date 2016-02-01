@@ -98,11 +98,13 @@ h1 a span {
 code,
 textarea {
   font-family: 'Roboto Mono', sans-serif;
-  font-size: 0.5rem;
   line-height: 1.75;
   -moz-tab-size: 2;
     -o-tab-size: 2;
        tab-size: 2;
+}
+code {
+  font-size: 0.5rem;
 }
 main {
   height: calc(100vh - 60px);
@@ -126,6 +128,7 @@ textarea {
   outline: 0;
   resize: none;
   padding: 15px;
+  font-size: 0.75rem;
 }
 @media (min-width: 1000px) {
   textarea {
