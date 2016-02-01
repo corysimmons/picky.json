@@ -4,4 +4,5 @@
 - `npm i`
 
 #### Develop
-`npm start`
+- `npm start`
+- `npm run format:standard` before submitting a PR

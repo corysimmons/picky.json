@@ -7,19 +7,25 @@
     "copy:ractive": "cp ./node_modules/ractive/ractive.js assets/dist/js/",
     "copy:jquery": "cp ./node_modules/jquery/dist/jquery.min.js assets/dist/js/",
     "copy:images": "cp -R assets/src/img assets/dist",
-    "images:svgo": "svgo -f assets/dist/img"
+    "images:svgo": "svgo -f assets/dist/img",
+    "format:standard": "standard assets/src/js/picky.js"
   },
   "babel": {
     "presets": [
       "es2015"
     ]
   },
+  "standard": {
+    "parser": "babel-eslint"
+  },
   "devDependencies": {
     "autoprefixer-stylus": "^0.9.1",
     "babel-cli": "^6.4.5",
+    "babel-eslint": "^5.0.0-beta8",
     "babel-preset-es2015": "^6.3.13",
     "browser-sync": "^2.11.1",
     "npm-run-all": "^1.5.1",
+    "standard": "^5.4.1",
     "stylus": "^0.53.0"
   },
   "dependencies": {
