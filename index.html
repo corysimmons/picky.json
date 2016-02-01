@@ -48,7 +48,7 @@
         <div class="parent">
           <span class="hljs-attr">
             {{#if @keypath.split('.')[@keypath.split('.').length -1] != @index}}
-              {{@key}}:
+              "{{@key}}":
             {{/if}}
           </span>
           {{#if typeof this === 'object'}}

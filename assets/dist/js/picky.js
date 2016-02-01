@@ -9,6 +9,9 @@ Ractive.defaults.data.pickyLengthCheck = function (keypath, index) {
   return index < length - 1;
 };
 
+var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+var regex = new RegExp(expression);
+
 var main = new Ractive({
   el: '#outlet',
   template: '#recurse'
@@ -35,7 +38,7 @@ input.on('highlight', function (el, value) {
 
 // Test if JSON is valid and trigger notification if it's not
 var validNotification = function validNotification() {
-  if ($('textarea').val() !== '') {
+  if ($('textarea').val() !== '' && !$('textarea').val().match(regex)) {
     try {
       $.parseJSON($('textarea').val());
       $('.invalid-json').fadeOut();
@@ -104,7 +107,7 @@ $('textarea').on('keydown', function (e) {
   }
 }).on('keyup', function () {
   try {
-    main.set(JSON.parse($(this).val()));
+    main.reset(JSON.parse($(this).val()));
   } catch (error) {
     if (!$(this).val().length) {
       main.reset();
@@ -136,8 +139,6 @@ var debounceRequest = function debounceRequest(contents, timeout) {
 // If it is, populate <code> with that data
 // If it's not, populate <code> with whatever is in <textarea>
 $('textarea').keyup(function () {
-  var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
-  var regex = new RegExp(expression);
   var url = $('textarea').val().trim();
 
   clearTimeout(timeout);
