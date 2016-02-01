@@ -1,6 +1,6 @@
 'use strict';
 
-// /* global $, Clipboard, hljs */
+/* global Ractive, $, Clipboard */
 
 // Adds the commas after the attributes in the JSON
 Ractive.defaults.data.pickyLengthCheck = function (keypath, index) {
@@ -153,7 +153,6 @@ $('textarea').on('keydown', function (e) {
 var timeout = '';
 var debounceRequest = function debounceRequest(contents, timeout) {
   timeout = setTimeout(function () {
-
     $.ajax({
       url: contents,
       type: 'GET',

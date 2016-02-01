@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>picky.json | Dump JSON. Click value. Get selector.</title>
+    <title>picky.json | Dump JSON. Click something. Get selector.</title>
     <meta name="description" content="Manually parsing JSON to get the selector you want is human error prone and just not much fun. picky.json lets you input raw JSON (or a URL that returns JSON) and then click on a value to get the selector you need quickly and easily!">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/ico" href="assets/dist/img/favicon.ico">
@@ -28,9 +28,7 @@
         <div class="resize">
           <div class="holder"></div>
         </div>
-        <div class="grab">
-
-        </div>
+        <div class="grab"></div>
         <pre><code class="json hljs"></code></pre>
         <div class="invalid-json">
           <p>
@@ -79,7 +77,7 @@
     </script>
 
     <script id="grab" type="text/ractive">
-      <input id="picked" type="text" class="input" placeholder="Click a value from your JSON or search for it!" value="{{path}}" on-keyup="highlight:{{path}}"/>
+      <input id="picked" type="text" class="input" placeholder="Click something or type a selector" value="{{path}}" on-keyup="highlight:{{path}}"/>
       <button class="btn-clipboard" data-clipboard-target="#picked">Copy</button>
     </script>
 

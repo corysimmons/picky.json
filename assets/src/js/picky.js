@@ -1,7 +1,7 @@
-// /* global $, Clipboard, hljs */
+/* global Ractive, $, Clipboard */
 
 // Adds the commas after the attributes in the JSON
-Ractive.defaults.data.pickyLengthCheck = function(keypath, index) {
+Ractive.defaults.data.pickyLengthCheck = function (keypath, index) {
   const items = this.get(keypath.replace(/\.[a-z\_0-9]*$/gi, ''))
   const length = Array.isArray(items) ? items.length : Object.keys(items).length
   return index < length - 1
@@ -35,12 +35,12 @@ const unformatSelected = (path) => {
   return path.replace(/\.([0-9]+)/g, '[$1').replace(/([0-9]+)\./g, '$1].').replace(/\.$/, '').replace(/(\[[0-9]*$)/, '$1]')
 }
 
-main.on('showPath', function(el, path) {
+main.on('showPath', function (el, path) {
   this.set('pickyIsSelected', path)
   input.set('path', unformatSelected(path.replace(/^data./, '')))
 })
 
-input.on('highlight', function(el, value) {
+input.on('highlight', function (el, value) {
   main.set('pickyIsSelected', 'data.' + formatSelected(value))
 })
 
@@ -67,7 +67,7 @@ $('.btn-example').click(() => {
     url: 'https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco',
     success: (data) => {
       $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco')
-      main.set('pickyIsSelected', '');
+      main.set('pickyIsSelected', '')
       main.reset({
         data: JSON.parse(data)
       })
@@ -108,7 +108,7 @@ $(window).on('resize', () =>
   $('textarea, .code-wrap').removeAttr('style')
 )
 
-$('textarea').on('keydown', function(e) {
+$('textarea').on('keydown', function (e) {
   if (e.which === 9) {
     e.preventDefault()
     if (this.value) {
@@ -136,7 +136,7 @@ $('textarea').on('keydown', function(e) {
       this.selectionEnd = end + count
     }
   }
-}).on('keyup', function() {
+}).on('keyup', function () {
   try {
     main.reset({
       data: JSON.parse($(this).val())
@@ -148,10 +148,9 @@ $('textarea').on('keydown', function(e) {
   }
 })
 
-let timeout = '';
+let timeout = ''
 const debounceRequest = (contents, timeout) => {
   timeout = setTimeout(() => {
-
     $.ajax({
       url: contents,
       type: 'GET',
@@ -165,7 +164,6 @@ const debounceRequest = (contents, timeout) => {
         main.set($('textarea').val())
       }
     })
-
   }, timeout)
 }
 
@@ -181,5 +179,4 @@ $('textarea').keyup(() => {
   }
 
   $('#picked').val('')
-
 })
