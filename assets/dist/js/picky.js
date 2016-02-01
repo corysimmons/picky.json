@@ -31,11 +31,11 @@ var input = new Ractive({
 
 main.on('showPath', function (el, path) {
   this.set('pickyIsSelected', path);
-  input.set('path', path);
+  input.set('path', path.replace(/^data./, ''));
 });
 
 input.on('highlight', function (el, value) {
-  main.set('pickyIsSelected', value);
+  main.set('pickyIsSelected', 'data.' + value);
 });
 
 // Test if JSON is valid and trigger notification if it's not
