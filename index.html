@@ -40,8 +40,8 @@
     </main>
 
     <script id="main" type="text/ractive">
-      {{#if data}}
-        {<div>{{>recurse data}}</div>}
+      {{#if this.data}}
+        {{#if Array.isArray(this.data)}}[{{else}} { {{/if}}<div>{{>recurse data}}</div>{{#if Array.isArray(this.data)}}]{{else}}} {{/if}}
       {{/if}}
     </script>
 
