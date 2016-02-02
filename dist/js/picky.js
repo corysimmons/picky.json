@@ -23,7 +23,7 @@ var regex = new RegExp(expression);
 var main = new Ractive({
   el: '.json',
   template: '#main',
-  data: localStorage.main ? JSON.parse(localStorage.getItem('main')) : {}
+  data: localStorage.main ? JSON.parse(localStorage.getItem('main')) : { collapsed: [] }
 });
 
 var input = new Ractive({
@@ -52,6 +52,16 @@ var unformatSelected = function unformatSelected(path) {
 main.on('showPath', function (el, path) {
   this.set('pickyIsSelected', path);
   input.set('path', unformatSelected(path.replace(/^data./, '')));
+});
+
+main.on('collapse', function (el) {
+  if (!this.get('collapsed')) this.set('collapsed', []);
+
+  if (this.get('collapsed').indexOf(el.keypath) > -1) {
+    this.splice('collapsed', this.get('collapsed').indexOf(el.keypath), 1);
+  } else {
+    this.push('collapsed', el.keypath);
+  }
 });
 
 input.on('highlight', function (el, value) {
@@ -215,9 +225,16 @@ $('textarea').on('keyup', function () {
 // Before unload, stores everything in localstorage, the input will only get stored int he local storage
 // if there is both a textarea value and data in the main component
 $(window).on('beforeunload', function () {
-  localStorage.setItem('main', JSON.stringify(main.get() || {}));
+  if (!main.get('collapsed') || !main.get('collapsed').length) main.set('collapsed', []);
+  localStorage.setItem('main', JSON.stringify(main.get() || { collapsed: [] }));
   localStorage.setItem('input', JSON.stringify($('textarea').val().length && main.get('data') ? input.get() : {}));
   localStorage.setItem('text', $('textarea').val());
+});
+
+$(document).on('mouseenter', '.hljs-wrap, .hljs-attr, .collapsible', function () {
+  $(this).closest('.parent').addClass('active-collapse');
+}).on('mouseout', '.hljs-wrap, .hljs-attr, .collapsible', function () {
+  $('.active-collapse').removeClass('active-collapse');
 });
 
 //# sourceMappingURL=picky.js.map

@@ -158,8 +158,8 @@ code {
   height: calc(100% - 57px);
 }
 code.hljs {
-  padding: 15px !important;
-  overflow: scroll !important;
+  padding: 15px;
+  overflow: scroll;
 }
 .grab {
   height: 50px;
@@ -251,6 +251,7 @@ code.hljs {
 .hljs-wrap,
 .hljs-attr {
   cursor: pointer;
+  position: relative;
 }
 .hljs-string.is-selected,
 .hljs-number.is-selected,
@@ -273,8 +274,34 @@ code.hljs {
 .parse-field {
   display: none;
 }
+.empty {
+  display: none;
+  position: relative;
+  left: -8px;
+}
 .parent {
   padding-left: 10px;
+  position: relative;
+}
+.parent.collapsed .parent {
+  display: none;
+}
+.parent.collapsed .empty {
+  display: initial;
+}
+.active-collapse > .collapsible {
+  opacity: 1;
+  cursor: pointer;
+}
+.collapsible {
+  display: block;
+  color: #000;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 18px;
 }
 .invalid-json {
   display: none;
