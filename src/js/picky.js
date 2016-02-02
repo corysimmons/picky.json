@@ -51,9 +51,7 @@ main.on('showPath', function (el, path) {
 })
 
 main.on('collapse', function (el) {
-  $(el.node)
-    .text(el.node.innerHTML === '-' ? '+' : '-')
-    .closest('.parent').toggleClass('collapsed')
+  this.toggle(el.keypath + '.collapsed')
 })
 
 input.on('highlight', function (el, value) {
