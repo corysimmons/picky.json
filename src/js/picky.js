@@ -224,7 +224,8 @@ $('textarea').on('keyup', () => {
 // Before unload, stores everything in localstorage, the input will only get stored int he local storage
 // if there is both a textarea value and data in the main component
 $(window).on('beforeunload', () => {
-  localStorage.setItem('main', JSON.stringify(main.get() || {}))
+  if (!main.get('collapsed') || !main.get('collapsed').length) main.set('collapsed', [])
+  localStorage.setItem('main', JSON.stringify(main.get() || { collapsed: [] }))
   localStorage.setItem('input', JSON.stringify($('textarea').val().length && main.get('data') ? input.get() : {}))
   localStorage.setItem('text', $('textarea').val())
 })
