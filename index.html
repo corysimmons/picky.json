@@ -40,8 +40,10 @@
     </main>
 
     <script id="main" type="text/ractive">
-      {{#if this.data}}
+      {{#if this.data && !this.loading}}
         {{#if Array.isArray(this.data)}}[{{else}} { {{/if}}<div>{{>recurse data}}</div>{{#if Array.isArray(this.data)}}]{{else}}} {{/if}}
+      {{elseif this.loading}}
+        Loading JSON from URL...
       {{/if}}
     </script>
 

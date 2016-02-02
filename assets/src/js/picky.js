@@ -18,18 +18,24 @@ const regex = new RegExp(expression)
 
 const main = new Ractive({
   el: '.json',
-  template: '#main'
+  template: '#main',
+  data: (localStorage.main ? JSON.parse(localStorage.getItem('main')) : {})
 })
 
 const input = new Ractive({
   el: '.grab',
   template: '#grab',
+  data: (localStorage.input ? JSON.parse(localStorage.getItem('input')) : {}),
   onrender: () => {
     // Activate clipboard
     const clipboard = new Clipboard('.btn-clipboard') // Stop crying Firefox!
     clipboard // stop crying StandardJS!
   }
 })
+
+if (localStorage.text) {
+  $('textarea').val(localStorage.getItem('text'))
+}
 
 const formatSelected = (path) => {
   return path.replace(/\[/g, '.').replace(/\]\.?/g, '.').replace(/\.$/, '')
@@ -177,7 +183,10 @@ const debounceRequest = (contents, timeout) => {
         console.log(`Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4`)
         main.set($('textarea').val())
       }
+    }).always(() => {
+      main.set('loading', false)
     })
+
   }, timeout)
 }
 
@@ -189,11 +198,22 @@ $('textarea').on('keyup', () => {
 
   clearTimeout(timeout)
   if (url.match(regex)) {
-    debounceRequest(url, 1000)
+    main.set('loading', true)
+    debounceRequest(url, 2000)
+  } else {
+    main.set('loading', false)
   }
 
   $('#picked').val('')
 
 }).on('keydown', () => {
   clearTimeout(timeout)
+})
+
+// Before unload, stores everything in localstorage, the input will only get stored int he local storage
+// if there is both a textarea value and data in the main component
+$(window).on('beforeunload', () => {
+  localStorage.setItem('main', JSON.stringify(main.get() || {}))
+  localStorage.setItem('input', JSON.stringify($('textarea').val().length && main.get('data') ? input.get() : {}))
+  localStorage.setItem('text', $('textarea').val())
 })
