@@ -56,9 +56,7 @@
               {{> object}}
             {{/if}}
           {{else}}
-            {{#if inArrayCheck(@keypath, @index) }}
-              <span class="hljs-attr{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">"{{@key}}"</span>:
-            {{/if}}
+            {{> attr}}
             <span class="{{#if typeof this == 'string'}}hljs-string{{else}}hljs-number{{/if}} {{~/pickyIsSelected === @keypath ? 'is-selected' : ''}}" on-click="showPath:{{@keypath}}">{{#if typeof this == 'string'}}"{{this}}"{{else}}{{this}}{{/if}}</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
           {{/if}}
         </div>
@@ -72,7 +70,7 @@
     </script>
 
     <script id="object" type="text/ractive">
-
+      {{> attr}}
       <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">{</span>
         {{> recurse}}
       <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">}</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
@@ -81,6 +79,12 @@
     <script id="grab" type="text/ractive">
       <input id="picked" type="text" class="input" placeholder="Click something or type a selector" value="{{path}}" on-keyup="highlight:{{path}}"/>
       <button class="btn-clipboard" data-clipboard-target="#picked">Copy</button>
+    </script>
+
+    <script id="attr" type="text/ractive">
+      {{#if inArrayCheck(@keypath, @index) }}
+        <span class="hljs-attr{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">"{{@key}}"</span>:
+      {{/if}}
     </script>
 
     <div class="parse-field"></div>
