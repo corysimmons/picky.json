@@ -23,7 +23,7 @@ var regex = new RegExp(expression);
 var main = new Ractive({
   el: '.json',
   template: '#main',
-  data: localStorage.main ? JSON.parse(localStorage.getItem('main')) : {}
+  data: localStorage.main ? JSON.parse(localStorage.getItem('main')) : { collapsed: [] }
 });
 
 var input = new Ractive({
@@ -55,7 +55,13 @@ main.on('showPath', function (el, path) {
 });
 
 main.on('collapse', function (el) {
-  this.toggle(el.keypath + '.collapsed');
+  if (!this.get('collapsed')) this.set('collapsed', []);
+
+  if (this.get('collapsed').indexOf(el.keypath) > -1) {
+    this.splice('collapsed', this.get('collapsed').indexOf(el.keypath), 1);
+  } else {
+    this.push('collapsed', el.keypath);
+  }
 });
 
 input.on('highlight', function (el, value) {
