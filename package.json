@@ -4,7 +4,7 @@
     "server:browser-sync": "./node_modules/.bin/browser-sync start --no-notify --no-open --server --files='**/*.html, dist/**/*'",
     "styles:stylus": "./node_modules/.bin/stylus -m -u autoprefixer-stylus -w ./src/css/style.styl -o dist/css",
     "scripts:babel": "./node_modules/.bin/babel -s -w ./src/js/picky.js -o dist/js/picky.js",
-    "copy:ractive": "cp ./node_modules/ractive/ractive.js dist/js/",
+    "copy:ractive": "cp ./node_modules/ractive/{ractive.js,ractive.js.map} dist/js/",
     "copy:jquery": "cp ./node_modules/jquery/dist/jquery.min.js dist/js/",
     "copy:clipboard": "cp ./node_modules/clipboard/dist/clipboard.js dist/js/",
     "copy:analytics": "cp ./src/js/analytics.js dist/js/",

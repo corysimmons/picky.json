@@ -70,7 +70,7 @@
 
     <script id="array" type="text/ractive">
       <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">[</span>
-      <span class="collapsible" on-click="collapse">{{~/collapsed.indexOf(@keypath) > -1 ? '+' : '-'}}</span>
+      <span class="collapsible" on-click="collapse">{{{~/collapsed.indexOf(@keypath) > -1 ? '&#43;' : '&#45;'}}}</span>
         {{> recurse}}
       <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">]</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
     </script>
@@ -78,7 +78,7 @@
     <script id="object" type="text/ractive">
       {{> attr}}
       <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">{</span>
-      <span class="collapsible" on-click="collapse">{{~/collapsed.indexOf(@keypath) > -1 ? '+' : '-'}}</span>
+      <span class="collapsible" on-click="collapse">{{{~/collapsed.indexOf(@keypath) > -1 ? '&#43;' : '&#45;'}}}</span>
         {{> recurse}}
       <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">}</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
     </script>
