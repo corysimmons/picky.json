@@ -1,16 +1,16 @@
 {
   "scripts": {
     "start": "npm run clean && ./node_modules/.bin/npm-run-all copy:* images:* --parallel server:* styles:* scripts:*",
-    "server:browser-sync": "./node_modules/.bin/browser-sync start --no-notify --no-open --server --files='**/*.html, assets/**/*'",
-    "styles:stylus": "./node_modules/.bin/stylus -m -u autoprefixer-stylus -w ./src/css/style.styl -o assets/css",
-    "scripts:babel": "./node_modules/.bin/babel -s -w ./src/js/picky.js -o assets/js/picky.js",
-    "copy:ractive": "cp ./node_modules/ractive/ractive.js assets/js/",
-    "copy:jquery": "cp ./node_modules/jquery/dist/jquery.min.js assets/js/",
-    "copy:clipboard": "cp ./node_modules/clipboard/dist/clipboard.js assets/js/",
-    "copy:analytics": "cp ./src/js/analytics.js assets/js/",
-    "copy:images": "cp -R ./src/img assets",
-    "images:svgo": "svgo -f assets/img",
-    "clean": "rm -drf assets && mkdir -p ./assets/{js,css,img}",
+    "server:browser-sync": "./node_modules/.bin/browser-sync start --no-notify --no-open --server --files='**/*.html, dist/**/*'",
+    "styles:stylus": "./node_modules/.bin/stylus -m -u autoprefixer-stylus -w ./src/css/style.styl -o dist/css",
+    "scripts:babel": "./node_modules/.bin/babel -s -w ./src/js/picky.js -o dist/js/picky.js",
+    "copy:ractive": "cp ./node_modules/ractive/ractive.js dist/js/",
+    "copy:jquery": "cp ./node_modules/jquery/dist/jquery.min.js dist/js/",
+    "copy:clipboard": "cp ./node_modules/clipboard/dist/clipboard.js dist/js/",
+    "copy:analytics": "cp ./src/js/analytics.js dist/js/",
+    "copy:images": "cp -R ./src/img dist",
+    "images:svgo": "svgo -f dist/img",
+    "clean": "rm -drf dist && mkdir -p ./dist/{js,css,img}",
     "format:standard": "standard ./src/js/picky.js"
   },
   "babel": {
