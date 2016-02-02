@@ -1,7 +1,7 @@
 <h1 align="center">picky.json</h1>
 
 <p align="center">
-  :sparkles: Dump JSON. Click something. Get selector. :sparkles:
+  :mag: Dump JSON. Click something. Get selector. :mag_right:
 </p>
 
 ### Usage
