@@ -177,7 +177,10 @@ const debounceRequest = (contents, timeout) => {
         console.log(`Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4`)
         main.set($('textarea').val())
       }
+    }).always(() => {
+      main.set('loading', false)
     })
+
   }, timeout)
 }
 
@@ -189,7 +192,10 @@ $('textarea').on('keyup', () => {
 
   clearTimeout(timeout)
   if (url.match(regex)) {
-    debounceRequest(url, 1000)
+    main.set('loading', true)
+    debounceRequest(url, 2000)
+  } else {
+    main.set('loading', false)
   }
 
   $('#picked').val('')
