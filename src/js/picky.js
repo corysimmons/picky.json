@@ -50,6 +50,12 @@ main.on('showPath', function (el, path) {
   input.set('path', unformatSelected(path.replace(/^data./, '')))
 })
 
+main.on('collapse', function (el) {
+  $(el.node)
+    .text(el.node.innerHTML === '-' ? '+' : '-')
+    .closest('.parent').toggleClass('collapsed')
+})
+
 input.on('highlight', function (el, value) {
   main.set('pickyIsSelected', 'data.' + formatSelected(value))
 })
@@ -216,4 +222,10 @@ $(window).on('beforeunload', () => {
   localStorage.setItem('main', JSON.stringify(main.get() || {}))
   localStorage.setItem('input', JSON.stringify($('textarea').val().length && main.get('data') ? input.get() : {}))
   localStorage.setItem('text', $('textarea').val())
+})
+
+$(document).on('mouseenter', '.hljs-wrap, .hljs-attr, .collapsible', function() {
+  $(this).closest('.parent').addClass('active-collapse')
+}).on('mouseout', '.hljs-wrap, .hljs-attr, .collapsible', () => {
+  $('.active-collapse').removeClass('active-collapse')
 })

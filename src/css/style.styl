@@ -127,9 +127,8 @@ code
   height: calc(100% - 57px)
 
 code.hljs
-  // Stop styling stuff you ugly libraries!
-  padding: 15px !important
-  overflow: scroll !important
+  padding: 15px
+  overflow: scroll
 
 .grab
   height: 50px
@@ -206,6 +205,7 @@ code.hljs
 
 .hljs-string, .hljs-number, .hljs-wrap, .hljs-attr
   cursor: pointer
+  position: relative
   &.is-selected
     background: lighten(yellow, 50%)
   &:hover
@@ -216,8 +216,34 @@ code.hljs
 .parse-field
   display: none
 
+.empty
+  display: none
+  position: relative
+  left: -5px
+
 .parent
   padding-left: 10px
+  position: relative
+  &.collapsed
+    .parent
+      display: none
+    .empty
+      display: initial
+
+
+// .hljs-attr:hover + .collapsible, .collapsible:hover
+.active-collapse > .collapsible
+  opacity: 1
+  cursor: pointer
+
+.collapsible
+  display: block
+  color: black
+  position: absolute
+  top: 0
+  left: 0
+  opacity: 0
+  width: 18px
 
 .invalid-json
   display: none
