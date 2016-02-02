@@ -22,18 +22,24 @@ var regex = new RegExp(expression);
 
 var main = new Ractive({
   el: '.json',
-  template: '#main'
+  template: '#main',
+  data: localStorage.main ? JSON.parse(localStorage.getItem('main')) : {}
 });
 
 var input = new Ractive({
   el: '.grab',
   template: '#grab',
+  data: localStorage.input ? JSON.parse(localStorage.getItem('input')) : {},
   onrender: function onrender() {
     // Activate clipboard
     var clipboard = new Clipboard('.btn-clipboard'); // Stop crying Firefox!
     clipboard; // stop crying StandardJS!
   }
 });
+
+if (localStorage.text) {
+  $('textarea').val(localStorage.getItem('text'));
+}
 
 var formatSelected = function formatSelected(path) {
   return path.replace(/\[/g, '.').replace(/\]\.?/g, '.').replace(/\.$/, '');
@@ -199,5 +205,13 @@ $('textarea').on('keyup', function () {
   $('#picked').val('');
 }).on('keydown', function () {
   clearTimeout(timeout);
+});
+
+// Before unload, stores everything in localstorage, the input will only get stored int he local storage
+// if there is both a textarea value and data in the main component
+$(window).on('beforeunload', function () {
+  localStorage.setItem('main', JSON.stringify(main.get() || {}));
+  localStorage.setItem('input', JSON.stringify($('textarea').val().length && main.get('data') ? input.get() : {}));
+  localStorage.setItem('text', $('textarea').val());
 });
 //# sourceMappingURL=picky.js.map
