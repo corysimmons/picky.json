@@ -89,9 +89,9 @@ const resizer = (offset, field, max) => {
 }
 
 let resizing = false
-$('.resize').on('mousedown touchstart', () =>
+$('.resize').on('mousedown touchstart', () => {
   resizing = true
-)
+})
 
 $(document).on('mousemove touchmove', (e) => {
   if (!resizing) {
@@ -103,9 +103,9 @@ $(document).on('mousemove touchmove', (e) => {
     resizer((((e.originalEvent.pageY || e.originalEvent.touches[0].pageY) / document.querySelector('body').clientHeight) * 100) - 5, 'height', 20)
     return false
   }
-}).on('mouseup touchend', () =>
+}).on('mouseup touchend', () => {
   resizing = false
-)
+})
 
 // Remove the resize styles on window change so it doesn't get wierd
 $(window).on('resize', () =>
@@ -155,6 +155,9 @@ $('textarea').on('keydown', function (e) {
 let timeout = ''
 const debounceRequest = (contents, timeout) => {
   timeout = setTimeout(() => {
+
+    if (!$('textarea').val().length) return
+
     $.ajax({
       url: contents,
       type: 'GET',
@@ -176,7 +179,7 @@ const debounceRequest = (contents, timeout) => {
 // Test the input to see if it's a JSON url
 // If it is, populate <code> with that data
 // If it's not, populate <code> with whatever is in <textarea>
-$('textarea').keyup(() => {
+$('textarea').on('keyup', () => {
   let url = $('textarea').val().trim()
 
   clearTimeout(timeout)
@@ -185,4 +188,7 @@ $('textarea').keyup(() => {
   }
 
   $('#picked').val('')
+
+}).on('keydown', () => {
+  clearTimeout(timeout)
 })

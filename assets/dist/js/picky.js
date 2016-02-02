@@ -94,7 +94,7 @@ var resizer = function resizer(offset, field, max) {
 
 var resizing = false;
 $('.resize').on('mousedown touchstart', function () {
-  return resizing = true;
+  resizing = true;
 });
 
 $(document).on('mousemove touchmove', function (e) {
@@ -108,7 +108,7 @@ $(document).on('mousemove touchmove', function (e) {
     return false;
   }
 }).on('mouseup touchend', function () {
-  return resizing = false;
+  resizing = false;
 });
 
 // Remove the resize styles on window change so it doesn't get wierd
@@ -159,6 +159,9 @@ $('textarea').on('keydown', function (e) {
 var timeout = '';
 var debounceRequest = function debounceRequest(contents, timeout) {
   timeout = setTimeout(function () {
+
+    if (!$('textarea').val().length) return;
+
     $.ajax({
       url: contents,
       type: 'GET',
@@ -180,7 +183,7 @@ var debounceRequest = function debounceRequest(contents, timeout) {
 // Test the input to see if it's a JSON url
 // If it is, populate <code> with that data
 // If it's not, populate <code> with whatever is in <textarea>
-$('textarea').keyup(function () {
+$('textarea').on('keyup', function () {
   var url = $('textarea').val().trim();
 
   clearTimeout(timeout);
@@ -189,5 +192,7 @@ $('textarea').keyup(function () {
   }
 
   $('#picked').val('');
+}).on('keydown', function () {
+  clearTimeout(timeout);
 });
 //# sourceMappingURL=picky.js.map
