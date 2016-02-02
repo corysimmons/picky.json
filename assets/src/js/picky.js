@@ -158,6 +158,11 @@ const debounceRequest = (contents, timeout) => {
 
     if (!$('textarea').val().length) return
 
+    if (!$('textarea').val().match(regex)) {
+      main.reset()
+      return
+    }
+
     $.ajax({
       url: contents,
       type: 'GET',
