@@ -14,7 +14,7 @@ var main = new Ractive({
   template: templates.main,
   partials: {
     array: templates.array,
-    object: templates.object,
+    object: templates['object'],
     attr: templates.attr,
     recurse: templates.recurse
   },
