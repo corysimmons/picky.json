@@ -66,7 +66,7 @@
         }}
 
           {{#each context}}
-            <div class="parent{{#if ~/collapsed.indexOf(@keypath) > -1 }} collapsed{{/if}}">
+            <div class="parent">
               {{#if typeof this === 'object'}}
                 {{#if Array.isArray(this)}}
                   <span class="hljs-attr{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">"{{@key}}"</span>:
@@ -82,17 +82,29 @@
           {{/each}}
 
         {{/with}}
-        <span class="empty">...</span>
+
       {{/if}}
     </script>
 
     <script id="array" type="text/ractive">
-      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">[</span><span class="collapsible" on-click="collapse">{{#if ~/collapsed.indexOf(@keypath) > -1 }}&#43;{{else}}&#45;{{/if}}</span>{{> 'recurse'}}<span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">]</span>{{#if @index < thisLength - 1}},{{/if}}
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">[</span><span class="collapsible" on-click="collapse">{{#if ~/collapsed.indexOf(@keypath) > -1 }}&#43;{{else}}&#45;{{/if}}</span>
+        {{#if ~/collapsed.indexOf(@keypath) > -1 }}
+          {{> 'recurse'}}
+        {{else}}
+          ...
+        {{/if}}
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">]</span>{{#if @index < thisLength - 1}},{{/if}}
     </script>
 
     <script id="object" type="text/ractive">
       {{> 'attr'}}
-      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">{</span><span class="collapsible" on-click="collapse">{{#if ~/collapsed.indexOf(@keypath) > -1 }}&#43;{{else}}&#45;{{/if}}</span>{{> 'recurse'}}<span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">}</span>{{#if @index < thisLength - 1}},{{/if}}
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">{</span><span class="collapsible" on-click="collapse">{{#if ~/collapsed.indexOf(@keypath) > -1 }}&#43;{{else}}&#45;{{/if}}</span>
+        {{#if ~/collapsed.indexOf(@keypath) > -1 }}
+          {{> 'recurse'}}
+        {{else}}
+          ...
+        {{/if}}
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">}</span>{{#if @index < thisLength - 1}},{{/if}}
     </script>
 
     <script id="grab" type="text/ractive">

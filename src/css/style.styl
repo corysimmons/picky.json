@@ -216,19 +216,9 @@ code.hljs
 .parse-field
   display: none
 
-.empty
-  display: none
-  position: relative
-  left: -4px
-
 .parent
   padding-left: 10px
   position: relative
-  &.collapsed
-    .parent
-      display: none
-    .empty
-      display: initial
 
 .active-collapse > .collapsible
   opacity: 1
@@ -290,12 +280,8 @@ code.hljs
 .loading-message
   text-align: center
 
-@keyframes load {
-  0%, 40%, 100% {
+@keyframes load
+  0%, 40%, 100%
     transform: scaleY(0.4);
-    -webkit-transform: scaleY(0.4);
-  }  20% {
+  20%
     transform: scaleY(1.0);
-    -webkit-transform: scaleY(1.0);
-  }
-}

@@ -274,20 +274,9 @@ code.hljs {
 .parse-field {
   display: none;
 }
-.empty {
-  display: none;
-  position: relative;
-  left: -4px;
-}
 .parent {
   padding-left: 10px;
   position: relative;
-}
-.parent.collapsed .parent {
-  display: none;
-}
-.parent.collapsed .empty {
-  display: initial;
 }
 .active-collapse > .collapsible {
   opacity: 1;
@@ -364,22 +353,22 @@ code.hljs {
 }
 @-webkit-keyframes load {
   0%, 40%, 100% {
-    transform: scaleY(0.4);
     -webkit-transform: scaleY(0.4);
+            transform: scaleY(0.4);
   }
   20% {
-    transform: scaleY(1);
     -webkit-transform: scaleY(1);
+            transform: scaleY(1);
   }
 }
 @keyframes load {
   0%, 40%, 100% {
-    transform: scaleY(0.4);
     -webkit-transform: scaleY(0.4);
+            transform: scaleY(0.4);
   }
   20% {
-    transform: scaleY(1);
     -webkit-transform: scaleY(1);
+            transform: scaleY(1);
   }
 }
 /*# sourceMappingURL=style.css.map */
