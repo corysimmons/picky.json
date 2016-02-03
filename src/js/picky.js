@@ -163,6 +163,7 @@ const debounceText = ($this, timeout) => {
 
     previousVal = $this.val()
     main.set('loading', false)
+    resetPickySelected()
 
   }, timeout)
 
@@ -203,8 +204,16 @@ const debounceRequest = (contents, timeout) => {
 }
 
 const resetPickySelected = () => {
-  input.set('path', '')
-  main.set('pickyIsSelected', '')
+
+  if (!input.get('path')) return
+
+  const path = formatSelected(input.get('path')).replace(/^\./, '')
+  const checkMain = main.get(`data.${path}`)
+
+  if (typeof checkMain === 'undefined') {
+    main.set('pickyIsSelected', '')
+    input.set('path', '')
+  }
 }
 
 // Test the input to see if it's a JSON url
@@ -214,8 +223,6 @@ $('textarea').on('keyup', function() {
   let text = $('textarea').val().trim()
 
   if (text === previousVal) return
-
-  resetPickySelected()
 
   clearTimeout(requestTimeout)
   if (text.match(urlRegex)) {

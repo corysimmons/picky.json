@@ -165,6 +165,7 @@ var debounceText = function debounceText($this, timeout) {
 
     previousVal = $this.val();
     main.set('loading', false);
+    resetPickySelected();
   }, timeout);
 };
 
@@ -202,8 +203,16 @@ var debounceRequest = function debounceRequest(contents, timeout) {
 };
 
 var resetPickySelected = function resetPickySelected() {
-  input.set('path', '');
-  main.set('pickyIsSelected', '');
+
+  if (!input.get('path')) return;
+
+  var path = formatSelected(input.get('path')).replace(/^\./, '');
+  var checkMain = main.get('data.' + path);
+
+  if (typeof checkMain === 'undefined') {
+    main.set('pickyIsSelected', '');
+    input.set('path', '');
+  }
 };
 
 // Test the input to see if it's a JSON url
@@ -213,8 +222,6 @@ $('textarea').on('keyup', function () {
   var text = $('textarea').val().trim();
 
   if (text === previousVal) return;
-
-  resetPickySelected();
 
   clearTimeout(requestTimeout);
   if (text.match(urlRegex)) {
