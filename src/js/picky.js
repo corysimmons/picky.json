@@ -231,9 +231,6 @@ $('textarea').on('keyup', function() {
 
 }).on('keydown', function(e) {
 
-  let text = $('textarea').val().trim()
-
-  if ( text.length < 1 ) main.set({ data: '' })
 
   if (e.which === 9) {
     e.preventDefault()
@@ -245,16 +242,15 @@ $('textarea').on('keyup', function() {
       let re = ''
       let count = ''
 
-      if (e.shiftKey && selected) {
+      if (e.shiftKey) {
         re = /^\t/gm
-        count = -selected.match(re) ? -selected.match(re).length : ''
+        count = -selected.match(re) ? selected.match(re).length : ''
         this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end)
       } else {
         re = /^/gm
-        count = selected.match(re) ? -selected.match(re).length : ''
+        count = selected.match(re).length
         this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end)
       }
-
       if (start === end) {
         this.selectionStart = end + count
       } else {
