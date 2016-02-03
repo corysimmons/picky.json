@@ -14,8 +14,7 @@ const main = new Ractive({
     attr: templates.attr,
     recurse: templates.recurse
   },
-  onrender : function() {
-
+  onrender: function () {
     if (localStorage.main) {
       this.set({loading: true, loadingMessage: 'Loading JSON from your previous session...'})
 
@@ -23,9 +22,7 @@ const main = new Ractive({
       setTimeout(() => {
         this.set(JSON.parse(localStorage.getItem('main')))
       }, 750)
-
     }
-
   },
   data: { data: null, collapsed: [], pickyIsSelected: '' }
 })
@@ -63,14 +60,13 @@ main.on('showPath', function (el, path) {
 })
 
 main.on('collapse', function (el) {
-  if ( !this.get('collapsed') ) this.set('collapsed', [])
+  if (!this.get('collapsed')) this.set('collapsed', [])
 
   if (this.get('collapsed').indexOf(el.keypath) > -1) {
     this.splice('collapsed', this.get('collapsed').indexOf(el.keypath), 1)
   } else {
     this.push('collapsed', el.keypath)
   }
-
 })
 
 input.on('highlight', function (el, value) {
@@ -142,7 +138,6 @@ $(window).on('resize', () =>
 )
 
 const resetPickySelected = () => {
-
   if (!input.get('path')) return
 
   const path = formatSelected(input.get('path')).replace(/^\./, '')
@@ -161,9 +156,7 @@ const resetPickySelected = () => {
 let previousVal = $('textarea').val()
 let textTimeout = ''
 const debounceText = ($this, timeout) => {
-
   textTimeout = setTimeout(() => {
-
     try {
       main.set({
         data: JSON.parse($this.val())
@@ -177,9 +170,7 @@ const debounceText = ($this, timeout) => {
     previousVal = $this.val()
     main.set('loading', false)
     resetPickySelected()
-
   }, timeout)
-
 }
 
 // If the user is typing a URL, debouncing is added to wait for
@@ -187,7 +178,6 @@ const debounceText = ($this, timeout) => {
 let requestTimeout = ''
 const debounceRequest = (contents, timeout) => {
   requestTimeout = setTimeout(() => {
-
     if (!$('textarea').val().length) return
 
     if (!$('textarea').val().match(urlRegex)) {
@@ -212,40 +202,35 @@ const debounceRequest = (contents, timeout) => {
     }).always(() => {
       main.set('loading', false)
     })
-
   }, timeout)
 }
 
 // Test the input to see if it's a JSON url
 // If it is, populate <code> with that data
 // If it's not, populate <code> with whatever is in <textarea>
-$('textarea').on('keyup', function() {
+$('textarea').on('keyup', function () {
   let text = $('textarea').val().trim()
 
   if (text === previousVal) return
 
   clearTimeout(requestTimeout)
+  clearTimeout(textTimeout)
   if (text.match(urlRegex)) {
     main.set('loading', true)
     main.set('loadingMessage', 'Loading JSON from URL...')
     debounceRequest(text, 2000)
   } else {
-
-    if ( $(this).val().length - previousVal.length > 500 || $(this).val().length - previousVal.length < -500) {
+    if ($(this).val().length - previousVal.length > 500 || $(this).val().length - previousVal.length < -500) {
       main.set('loading', true)
       main.set('loadingMessage', 'Loading large JSON changes...')
       debounceText($(this), 2000)
     } else {
       debounceText($(this), 0)
     }
-
   }
 
   previousVal = text
-
-}).on('keydown', function(e) {
-
-
+}).on('keydown', function (e) {
   if (e.which === 9) {
     e.preventDefault()
     if (this.value) {
@@ -275,7 +260,7 @@ $('textarea').on('keyup', function() {
   }
 
   clearTimeout(requestTimeout)
-
+  clearTimeout(textTimeout)
 })
 
 // Before unload, stores everything in localstorage, the input will only get stored int he local storage
@@ -288,7 +273,7 @@ $(window).on('beforeunload', () => {
   localStorage.setItem('text', $('textarea').val())
 })
 
-$(document).on('mouseenter', '.hljs-wrap, .hljs-attr, .collapsible', function() {
+$(document).on('mouseenter', '.hljs-wrap, .hljs-attr, .collapsible', function () {
   $(this).closest('.parent').addClass('active-collapse')
 }).on('mouseout', '.hljs-wrap, .hljs-attr, .collapsible', () => {
   $('.active-collapse').removeClass('active-collapse')

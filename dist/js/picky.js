@@ -144,7 +144,6 @@ $(window).on('resize', function () {
 });
 
 var resetPickySelected = function resetPickySelected() {
-
   if (!input.get('path')) return;
 
   var path = formatSelected(input.get('path')).replace(/^\./, '');
@@ -163,9 +162,7 @@ var resetPickySelected = function resetPickySelected() {
 var previousVal = $('textarea').val();
 var textTimeout = '';
 var debounceText = function debounceText($this, timeout) {
-
   textTimeout = setTimeout(function () {
-
     try {
       main.set({
         data: JSON.parse($this.val())
@@ -187,7 +184,6 @@ var debounceText = function debounceText($this, timeout) {
 var requestTimeout = '';
 var debounceRequest = function debounceRequest(contents, timeout) {
   requestTimeout = setTimeout(function () {
-
     if (!$('textarea').val().length) return;
 
     if (!$('textarea').val().match(urlRegex)) {
@@ -224,12 +220,12 @@ $('textarea').on('keyup', function () {
   if (text === previousVal) return;
 
   clearTimeout(requestTimeout);
+  clearTimeout(textTimeout);
   if (text.match(urlRegex)) {
     main.set('loading', true);
     main.set('loadingMessage', 'Loading JSON from URL...');
     debounceRequest(text, 2000);
   } else {
-
     if ($(this).val().length - previousVal.length > 500 || $(this).val().length - previousVal.length < -500) {
       main.set('loading', true);
       main.set('loadingMessage', 'Loading large JSON changes...');
@@ -241,7 +237,6 @@ $('textarea').on('keyup', function () {
 
   previousVal = text;
 }).on('keydown', function (e) {
-
   if (e.which === 9) {
     e.preventDefault();
     if (this.value) {
@@ -271,6 +266,7 @@ $('textarea').on('keyup', function () {
   }
 
   clearTimeout(requestTimeout);
+  clearTimeout(textTimeout);
 });
 
 // Before unload, stores everything in localstorage, the input will only get stored int he local storage
