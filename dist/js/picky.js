@@ -17,8 +17,8 @@ Ractive.defaults.data.inArrayCheck = function (keypath, index) {
 
 Ractive.DEBUG = false;
 
-var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
-var regex = new RegExp(expression);
+var expression = /^[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+var urlRegex = new RegExp(expression);
 
 var main = new Ractive({
   el: '.json',
@@ -75,7 +75,7 @@ input.on('highlight', function (el, value) {
 
 // Test if JSON is valid and trigger notification if it's not
 var validNotification = function validNotification() {
-  if ($('textarea').val() !== '' && !$('textarea').val().match(regex)) {
+  if ($('textarea').val() !== '' && !$('textarea').val().match(urlRegex)) {
     try {
       $.parseJSON($('textarea').val());
       $('.invalid-json').fadeOut();
@@ -137,53 +137,40 @@ $(window).on('resize', function () {
   return $('textarea, .code-wrap').removeAttr('style');
 });
 
-$('textarea').on('keydown', function (e) {
-  if (e.which === 9) {
-    e.preventDefault();
-    if (this.value) {
-      var val = this.value;
-      var start = this.selectionStart;
-      var end = this.selectionEnd;
-      var selected = val.substring(start, end);
-      var re = '';
-      var count = '';
+// If a user is typing text into the textarea which is
+// a largely different length then what we have already
+// it's a good chance that it's a large JSON object that
+// we'll need to debounce
+var previousVal = $('textarea').val();
+var textTimeout = '';
+var debounceText = function debounceText($this, timeout) {
 
-      if (e.shiftKey) {
-        re = /^\t/gm;
-        count = -selected.match(re).length;
-        this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end);
-      } else {
-        re = /^/gm;
-        count = selected.match(re).length;
-        this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end);
-      }
-      if (start === end) {
-        this.selectionStart = end + count;
-      } else {
-        this.selectionStart = start;
-      }
-      this.selectionEnd = end + count;
-    }
-  }
-}).on('keyup', function () {
-  try {
-    main.reset({
-      data: JSON.parse($(this).val())
-    });
-  } catch (error) {
-    if (!$(this).val().length) {
-      main.reset();
-    }
-  }
-});
+  textTimeout = setTimeout(function () {
 
-var timeout = '';
+    try {
+      main.reset({
+        data: JSON.parse($this.val())
+      });
+    } catch (error) {
+      if (!$this.val().length) {
+        main.reset();
+      }
+    }
+
+    previousVal = $this.val();
+    main.set('loading', false);
+  }, timeout);
+};
+
+// If the user is typing a URL, debouncing is added to wait for
+// the user to finish typing
+var requestTimeout = '';
 var debounceRequest = function debounceRequest(contents, timeout) {
-  timeout = setTimeout(function () {
+  requestTimeout = setTimeout(function () {
 
     if (!$('textarea').val().length) return;
 
-    if (!$('textarea').val().match(regex)) {
+    if (!$('textarea').val().match(urlRegex)) {
       main.reset();
       return;
     }
@@ -212,24 +199,70 @@ var debounceRequest = function debounceRequest(contents, timeout) {
 // If it is, populate <code> with that data
 // If it's not, populate <code> with whatever is in <textarea>
 $('textarea').on('keyup', function () {
-  var url = $('textarea').val().trim();
+  var text = $('textarea').val().trim();
 
-  clearTimeout(timeout);
-  if (url.match(regex)) {
+  if (text === previousVal) return;
+
+  clearTimeout(requestTimeout);
+  if (text.match(urlRegex)) {
     main.set('loading', true);
-    debounceRequest(url, 2000);
+    main.set('loadingMessage', 'Loading JSON from URL...');
+    debounceRequest(text, 2000);
   } else {
-    main.set('loading', false);
+
+    if ($(this).val().length - previousVal.length > 500 || $(this).val().length - previousVal.length < -500) {
+      main.set('loading', true);
+      main.set('loadingMessage', 'Loading large JSON changes...');
+      debounceText($(this), 2000);
+    } else {
+      debounceText($(this), 0);
+    }
   }
 
-  $('#picked').val('');
-}).on('keydown', function () {
-  clearTimeout(timeout);
+  previousVal = text;
+}).on('keydown', function (e) {
+
+  var text = $('textarea').val().trim();
+
+  if (text.length < 1) main.reset({ data: '' });
+
+  if (text === previousVal) return;
+
+  if (e.which === 9) {
+    e.preventDefault();
+    if (this.value) {
+      var val = this.value;
+      var start = this.selectionStart;
+      var end = this.selectionEnd;
+      var selected = val.substring(start, end);
+      var re = '';
+      var count = '';
+
+      if (e.shiftKey) {
+        re = /^\t/gm;
+        count = -selected.match(re).length;
+        this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end);
+      } else {
+        re = /^/gm;
+        count = selected.match(re).length;
+        this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end);
+      }
+      if (start === end) {
+        this.selectionStart = end + count;
+      } else {
+        this.selectionStart = start;
+      }
+      this.selectionEnd = end + count;
+    }
+  }
+
+  clearTimeout(requestTimeout);
 });
 
 // Before unload, stores everything in localstorage, the input will only get stored int he local storage
 // if there is both a textarea value and data in the main component
 $(window).on('beforeunload', function () {
+  main.set('loading', false);
   if (!main.get('collapsed') || !main.get('collapsed').length) main.set('collapsed', []);
   localStorage.setItem('main', JSON.stringify(main.get() || { collapsed: [] }));
   localStorage.setItem('input', JSON.stringify($('textarea').val().length && main.get('data') ? input.get() : {}));

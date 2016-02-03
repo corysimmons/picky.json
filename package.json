@@ -34,7 +34,7 @@
   "dependencies": {
     "clipboard": "^1.5.5",
     "jquery": "^2.2.0",
-    "ractive": "^0.7.3",
+    "ractive": "git+https://github.com/ractivejs/ractive.git#edge",
     "stylus": "^0.53.0",
     "svgo": "^0.6.1"
   }
