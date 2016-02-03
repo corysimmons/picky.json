@@ -202,6 +202,11 @@ const debounceRequest = (contents, timeout) => {
   }, timeout)
 }
 
+const resetPickySelected = () => {
+  input.set('path', '')
+  main.set('pickyIsSelected', '')
+}
+
 // Test the input to see if it's a JSON url
 // If it is, populate <code> with that data
 // If it's not, populate <code> with whatever is in <textarea>
@@ -210,7 +215,7 @@ $('textarea').on('keyup', function() {
 
   if (text === previousVal) return
 
-  input.set('pickyIsSelected', '')
+  resetPickySelected()
 
   clearTimeout(requestTimeout)
   if (text.match(urlRegex)) {
