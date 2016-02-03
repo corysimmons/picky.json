@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "npm run clean && ./node_modules/.bin/npm-run-all copy:* images:* --parallel server:* styles:* scripts:* precompile",
+    "start": "npm run clean && ./node_modules/.bin/npm-run-all copy:* images:* --parallel server:* styles:* scripts:* watch:*",
     "server:browser-sync": "./node_modules/.bin/browser-sync start --no-notify --no-open --server --files='**/*.html, dist/**/*'",
     "styles:stylus": "./node_modules/.bin/stylus -m -u autoprefixer-stylus -w ./src/css/style.styl -o dist/css",
     "scripts:babel": "./node_modules/.bin/babel -s -w ./src/js/picky.js -o dist/js/picky.js",
@@ -12,7 +12,8 @@
     "images:svgo": "svgo -f dist/img",
     "clean": "rm -drf dist && mkdir -p ./dist/{js,css,img}",
     "format:standard": "standard ./src/js/picky.js",
-    "precompile": "./node_modules/watchman/watchman ./src/templates \"node ./tasks/precompile.js\""
+    "precompile": "node ./tasks/precompile.js",
+    "watch:templates": "./node_modules/watchman/watchman ./src/templates \"npm run precompile\""
   },
   "babel": {
     "presets": [
