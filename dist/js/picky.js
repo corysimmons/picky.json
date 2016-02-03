@@ -46,7 +46,12 @@ var formatSelected = function formatSelected(path) {
 };
 
 var unformatSelected = function unformatSelected(path) {
-  return path.replace(/\.([0-9]+)/g, '[$1').replace(/([0-9]+)\./g, '$1].').replace(/\.$/, '').replace(/(\[[0-9]*$)/, '$1]').replace(/(^[0-9]*\])/, '[$1');
+  return path.replace(/\.?([0-9]+)\.?/g, '[$1].') // Wraps number keys in brackets
+  .replace(/([a-z0-9]+\-+[a-z0-9]+)\.?/g, '["$1"].') // Moves keys with dashes into square brackets
+  .replace(/\]\.\[/g, '][') // replace full stops where two brackets are next to eachother
+  .replace(/\.$/, '') // Gets rid of trailing full stop
+  .replace(/(\[[0-9]*$)/, '$1]') // Adds the bracket to the end if needed
+  .replace(/(^[0-9]*\])/, '[$1'); // adds the bracket to the beginning if needed
 };
 
 main.on('showPath', function (el, path) {
