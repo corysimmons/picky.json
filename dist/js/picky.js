@@ -76,7 +76,7 @@ main.on('collapse', function (el) {
 });
 
 input.on('highlight', function (el, value) {
-  main.set('pickyIsSelected', 'data.' + formatSelected(value));
+  main.set('pickyIsSelected', 'data.' + formatSelected(value).replace(/^\./, ''));
 });
 
 // Test if JSON is valid and trigger notification if it's not
