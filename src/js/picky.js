@@ -7,13 +7,19 @@ const urlRegex = new RegExp(expression)
 
 const main = new Ractive({
   el: '.json',
-  template: '#main',
+  template: templates.main,
+  partials: {
+    array: templates.array,
+    object: templates.object,
+    attr: templates.attr,
+    recurse: templates.recurse
+  },
   data: (localStorage.main ? JSON.parse(localStorage.getItem('main')) : { data: null, collapsed: [], pickyIsSelected: '' } )
 })
 
 const input = new Ractive({
   el: '.grab',
-  template: '#grab',
+  template: templates.grab,
   data: (localStorage.input ? JSON.parse(localStorage.getItem('input')) : {}),
   onrender: () => {
     const clipboard = new Clipboard('.btn-clipboard') // Stop crying Firefox!
