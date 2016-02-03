@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/ico" href="dist/img/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/github-gist.min.css">
     <link rel="stylesheet" href="dist/css/style.css">
   </head>
   <body>
@@ -39,45 +41,70 @@
       </div>
     </main>
 
-    <script id="main" type="text/ractive">
+     <script id="main" type="text/ractive">
       {{#if this.data && !this.loading}}
-        <div class="outer-bracket">{{#if Array.isArray(this.data)}}[{{else}}{{'{'}}{{/if}}</div>{{>recurse data}}<div class="outer-bracket">{{#if Array.isArray(this.data)}}]{{else}}{{'}'}}{{/if}}</div>
+        <div class="outer-bracket">{{#if Array.isArray(this.data)}}[{{else}}{{'{'}}{{/if}}</div>{{>'recurse' this.data}}<div class="outer-bracket">{{#if Array.isArray(this.data)}}]{{else}}{{'}'}}{{/if}}</div>
       {{elseif this.loading}}
-        Loading JSON from URL...
+        <div class="loading-message">
+          <div class="spinner">
+            <div class="rect1"></div>
+            <div class="rect2"></div>
+            <div class="rect3"></div>
+            <div class="rect4"></div>
+          </div>
+          {{this.loadingMessage || 'Loading JSON from URL...'}}
+        </div>
       {{/if}}
     </script>
 
     <script id="recurse" type="text/ractive">
       {{#if @key !== 'pickyCollapsed'}}
-        {{#each this}}
-          <div class="parent{{#if ~/collapsed.indexOf(@keypath) > -1 }} collapsed{{/if}}">
-            {{#if typeof this === 'object'}}
-              {{#if Array.isArray(this)}}
-                <span class="hljs-attr{{~/this.pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">"{{@key}}"</span>:
-                {{> array}}
+
+        {{#with this as context,
+              Array.isArray(this) as isArray,
+              ( Array.isArray(this) ? this.length : Object.keys(this).length ) as thisLength
+        }}
+
+          {{#each context}}
+            <div class="parent">
+              {{#if typeof this === 'object'}}
+                {{#if Array.isArray(this)}}
+                  <span class="hljs-attr{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">"{{@key}}"</span>:
+                  {{> 'array'}}
+                {{else}}
+                  {{> 'object'}}
+                {{/if}}
               {{else}}
-                {{> object}}
+                {{> 'attr'}}
+                <span class="{{#if typeof this == 'string'}}hljs-string{{else}}hljs-number{{/if}} {{~/pickyIsSelected === @keypath ? 'is-selected' : ''}}" on-click="showPath:{{@keypath}}">{{#if typeof this == 'string'}}"{{this}}"{{else}}{{this}}{{/if}}</span>{{#if @index < thisLength - 1 }},{{/if}}
               {{/if}}
-            {{else}}
-              {{> attr}}
-              <span class="{{#if typeof this == 'string'}}hljs-string{{else}}hljs-number{{/if}} {{~/this.pickyIsSelected === @keypath ? 'is-selected' : ''}}" on-click="showPath:{{@keypath}}">{{#if typeof this == 'string'}}"{{this}}"{{else}}{{this}}{{/if}}</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
-            {{/if}}
-          </div>
-        {{/each}}
-        <span class="empty">...</span>
+            </div>
+          {{/each}}
+
+        {{/with}}
+
       {{/if}}
     </script>
 
     <script id="array" type="text/ractive">
-      <span class="hljs-wrap{{~/this.pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">[</span>
-      <span class="collapsible" on-click="collapse">{{#if ~/collapsed.indexOf(@keypath) > -1 }}&#43;{{else}}&#45;{{/if}}</span>
-        {{> recurse}}
-      <span class="hljs-wrap{{~/this.pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">]</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">[</span><span class="collapsible" on-click="collapse">{{#if ~/collapsed.indexOf(@keypath) > -1 }}&#43;{{else}}&#45;{{/if}}</span>
+        {{#if ~/collapsed.indexOf(@keypath) > -1 }}
+          ...
+        {{else}}
+          {{> 'recurse'}}
+        {{/if}}
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">]</span>{{#if @index < thisLength - 1}},{{/if}}
     </script>
 
     <script id="object" type="text/ractive">
-      {{> attr}}
-      <span class="hljs-wrap{{~/this.pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">{</span><span class="collapsible" on-click="collapse">{{#if ~/collapsed.indexOf(@keypath) > -1 }}&#43;{{else}}&#45;{{/if}}</span>{{> recurse}}<span class="hljs-wrap{{~/this.pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">}</span>{{#if pickyLengthCheck(@keypath, @index)}},{{/if}}
+      {{> 'attr'}}
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">{</span><span class="collapsible" on-click="collapse">{{#if ~/collapsed.indexOf(@keypath) > -1 }}&#43;{{else}}&#45;{{/if}}</span>
+        {{#if ~/collapsed.indexOf(@keypath) > -1 }}
+          ...
+        {{else}}
+          {{> 'recurse'}}
+        {{/if}}
+      <span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">}</span>{{#if @index < thisLength - 1}},{{/if}}
     </script>
 
     <script id="grab" type="text/ractive">
@@ -86,12 +113,10 @@
     </script>
 
     <script id="attr" type="text/ractive">
-      {{#if inArrayCheck(@keypath, @index) }}
-        <span class="hljs-attr{{~/this.pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">"{{@key}}"</span>:
+      {{#if !isArray }}
+        <span class="hljs-attr{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">"{{@key}}"</span>:
       {{/if}}
     </script>
-
-    <div class="parse-field"></div>
 
     <script src="dist/js/jquery.min.js"></script>
     <script src="dist/js/ractive.js"></script>

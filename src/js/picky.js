@@ -1,25 +1,14 @@
 /* global Ractive, $, Clipboard */
 
-// Adds the commas after the attributes in the JSON
-Ractive.defaults.data.pickyLengthCheck = function (keypath, index) {
-  const items = this.get(keypath.replace(/\.[a-z\_0-9]*$/gi, ''))
-  const length = Array.isArray(items) ? items.length : Object.keys(items).length
-  return index < length - 1
-}
-
-Ractive.defaults.data.inArrayCheck = function (keypath, index) {
-  return !Array.isArray(this.get(keypath.replace(/\.[0-9]*$/, '')))
-}
-
 Ractive.DEBUG = false
 
-const expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
-const regex = new RegExp(expression)
+const expression = /^[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
+const urlRegex = new RegExp(expression)
 
 const main = new Ractive({
   el: '.json',
   template: '#main',
-  data: (localStorage.main ? JSON.parse(localStorage.getItem('main')) : { collapsed: [] })
+  data: (localStorage.main ? JSON.parse(localStorage.getItem('main')) : { data: null, collapsed: [], pickyIsSelected: '' } )
 })
 
 const input = new Ractive({
@@ -27,7 +16,6 @@ const input = new Ractive({
   template: '#grab',
   data: (localStorage.input ? JSON.parse(localStorage.getItem('input')) : {}),
   onrender: () => {
-    // Activate clipboard
     const clipboard = new Clipboard('.btn-clipboard') // Stop crying Firefox!
     clipboard // stop crying StandardJS!
   }
@@ -72,7 +60,7 @@ input.on('highlight', function (el, value) {
 
 // Test if JSON is valid and trigger notification if it's not
 const validNotification = () => {
-  if ($('textarea').val() !== '' && !$('textarea').val().match(regex)) {
+  if ($('textarea').val() !== '' && !$('textarea').val().match(urlRegex)) {
     try {
       $.parseJSON($('textarea').val())
       $('.invalid-json').fadeOut()
@@ -94,7 +82,7 @@ $('.btn-example').click(() => {
     success: (data) => {
       $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco')
       main.set('pickyIsSelected', '')
-      main.reset({
+      main.set({
         data: JSON.parse(data)
       })
     },
@@ -134,7 +122,102 @@ $(window).on('resize', () =>
   $('textarea, .code-wrap').removeAttr('style')
 )
 
-$('textarea').on('keydown', function (e) {
+// If a user is typing text into the textarea which is
+// a largely different length then what we have already
+// it's a good chance that it's a large JSON object that
+// we'll need to debounce
+let previousVal = $('textarea').val()
+let textTimeout = ''
+const debounceText = ($this, timeout) => {
+
+  textTimeout = setTimeout(() => {
+
+    try {
+      main.set({
+        data: JSON.parse($this.val())
+      })
+    } catch (error) {
+      if (!$this.val().length) {
+        main.set({data: ''})
+      }
+    }
+
+    previousVal = $this.val()
+    main.set('loading', false)
+
+  }, timeout)
+
+}
+
+// If the user is typing a URL, debouncing is added to wait for
+// the user to finish typing
+let requestTimeout = ''
+const debounceRequest = (contents, timeout) => {
+  requestTimeout = setTimeout(() => {
+
+    if (!$('textarea').val().length) return
+
+    if (!$('textarea').val().match(urlRegex)) {
+      main.set({data: ''})
+      return
+    }
+
+    $.ajax({
+      url: contents,
+      type: 'GET',
+      dataType: 'json',
+      success: (data) => {
+        main.set({
+          data: typeof data === 'object' ? data : JSON.parse(data)
+        })
+      },
+      error: () => {
+        // Send textarea code to highlight.js <code> container
+        console.log(`Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4`)
+        main.set($('textarea').val())
+      }
+    }).always(() => {
+      main.set('loading', false)
+    })
+
+  }, timeout)
+}
+
+// Test the input to see if it's a JSON url
+// If it is, populate <code> with that data
+// If it's not, populate <code> with whatever is in <textarea>
+$('textarea').on('keyup', function() {
+  let text = $('textarea').val().trim()
+
+  if (text === previousVal) return
+
+  clearTimeout(requestTimeout)
+  if (text.match(urlRegex)) {
+    main.set('loading', true)
+    main.set('loadingMessage', 'Loading JSON from URL...')
+    debounceRequest(text, 2000)
+  } else {
+
+    if ( $(this).val().length - previousVal.length > 500 || $(this).val().length - previousVal.length < -500) {
+      main.set('loading', true)
+      main.set('loadingMessage', 'Loading large JSON changes...')
+      debounceText($(this), 2000)
+    } else {
+      debounceText($(this), 0)
+    }
+
+  }
+
+  previousVal = text
+
+}).on('keydown', function(e) {
+
+  let text = $('textarea').val().trim()
+
+  if ( text.length < 1 ) main.set({ data: '' })
+
+  if (text === previousVal) return
+
   if (e.which === 9) {
     e.preventDefault()
     if (this.value) {
@@ -162,73 +245,15 @@ $('textarea').on('keydown', function (e) {
       this.selectionEnd = end + count
     }
   }
-}).on('keyup', function () {
-  try {
-    main.reset({
-      data: JSON.parse($(this).val())
-    })
-  } catch (error) {
-    if (!$(this).val().length) {
-      main.reset()
-    }
-  }
-})
 
-let timeout = ''
-const debounceRequest = (contents, timeout) => {
-  timeout = setTimeout(() => {
+  clearTimeout(requestTimeout)
 
-    if (!$('textarea').val().length) return
-
-    if (!$('textarea').val().match(regex)) {
-      main.reset()
-      return
-    }
-
-    $.ajax({
-      url: contents,
-      type: 'GET',
-      dataType: 'json',
-      success: (data) => {
-        main.reset({
-          data: typeof data === 'object' ? data : JSON.parse(data)
-        })
-      },
-      error: () => {
-        // Send textarea code to highlight.js <code> container
-        console.log(`Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4`)
-        main.set($('textarea').val())
-      }
-    }).always(() => {
-      main.set('loading', false)
-    })
-
-  }, timeout)
-}
-
-// Test the input to see if it's a JSON url
-// If it is, populate <code> with that data
-// If it's not, populate <code> with whatever is in <textarea>
-$('textarea').on('keyup', () => {
-  let url = $('textarea').val().trim()
-
-  clearTimeout(timeout)
-  if (url.match(regex)) {
-    main.set('loading', true)
-    debounceRequest(url, 2000)
-  } else {
-    main.set('loading', false)
-  }
-
-  $('#picked').val('')
-
-}).on('keydown', () => {
-  clearTimeout(timeout)
 })
 
 // Before unload, stores everything in localstorage, the input will only get stored int he local storage
 // if there is both a textarea value and data in the main component
 $(window).on('beforeunload', () => {
+  main.set('loading', false)
   if (!main.get('collapsed') || !main.get('collapsed').length) main.set('collapsed', [])
   localStorage.setItem('main', JSON.stringify(main.get() || { collapsed: [] }))
   localStorage.setItem('input', JSON.stringify($('textarea').val().length && main.get('data') ? input.get() : {}))
