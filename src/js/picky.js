@@ -7,13 +7,32 @@ const urlRegex = new RegExp(expression)
 
 const main = new Ractive({
   el: '.json',
-  template: '#main',
-  data: (localStorage.main ? JSON.parse(localStorage.getItem('main')) : { data: null, collapsed: [], pickyIsSelected: '' } )
+  template: templates.main,
+  partials: {
+    array: templates.array,
+    object: templates['object'],
+    attr: templates.attr,
+    recurse: templates.recurse
+  },
+  onrender : function() {
+
+    if (localStorage.main) {
+      this.set({loading: true, loadingMessage: 'Loading JSON from your previous session...'})
+
+      // Show the loading bar at least once
+      setTimeout(() => {
+        this.set(JSON.parse(localStorage.getItem('main')))
+      }, 750)
+
+    }
+
+  },
+  data: { data: null, collapsed: [], pickyIsSelected: '' }
 })
 
 const input = new Ractive({
   el: '.grab',
-  template: '#grab',
+  template: templates.grab,
   data: (localStorage.input ? JSON.parse(localStorage.getItem('input')) : {}),
   onrender: () => {
     const clipboard = new Clipboard('.btn-clipboard') // Stop crying Firefox!
@@ -55,7 +74,7 @@ main.on('collapse', function (el) {
 })
 
 input.on('highlight', function (el, value) {
-  main.set('pickyIsSelected', 'data.' + formatSelected(value))
+  main.set('pickyIsSelected', 'data.' + formatSelected(value).replace(/^\./, ''))
 })
 
 // Test if JSON is valid and trigger notification if it's not
@@ -122,6 +141,19 @@ $(window).on('resize', () =>
   $('textarea, .code-wrap').removeAttr('style')
 )
 
+const resetPickySelected = () => {
+
+  if (!input.get('path')) return
+
+  const path = formatSelected(input.get('path')).replace(/^\./, '')
+  const checkMain = main.get(`data.${path}`)
+
+  if (typeof checkMain === 'undefined') {
+    main.set('pickyIsSelected', '')
+    input.set('path', '')
+  }
+}
+
 // If a user is typing text into the textarea which is
 // a largely different length then what we have already
 // it's a good chance that it's a large JSON object that
@@ -144,6 +176,7 @@ const debounceText = ($this, timeout) => {
 
     previousVal = $this.val()
     main.set('loading', false)
+    resetPickySelected()
 
   }, timeout)
 
@@ -212,11 +245,6 @@ $('textarea').on('keyup', function() {
 
 }).on('keydown', function(e) {
 
-  let text = $('textarea').val().trim()
-
-  if ( text.length < 1 ) main.set({ data: '' })
-
-  if (text === previousVal) return
 
   if (e.which === 9) {
     e.preventDefault()
@@ -230,7 +258,7 @@ $('textarea').on('keyup', function() {
 
       if (e.shiftKey) {
         re = /^\t/gm
-        count = -selected.match(re).length
+        count = -selected.match(re) ? selected.match(re).length : ''
         this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end)
       } else {
         re = /^/gm

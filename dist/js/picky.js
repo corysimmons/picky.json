@@ -11,13 +11,31 @@ var urlRegex = new RegExp(expression);
 
 var main = new Ractive({
   el: '.json',
-  template: '#main',
-  data: localStorage.main ? JSON.parse(localStorage.getItem('main')) : { data: null, collapsed: [], pickyIsSelected: '' }
+  template: templates.main,
+  partials: {
+    array: templates.array,
+    object: templates['object'],
+    attr: templates.attr,
+    recurse: templates.recurse
+  },
+  onrender: function onrender() {
+    var _this = this;
+
+    if (localStorage.main) {
+      this.set({ loading: true, loadingMessage: 'Loading JSON from your previous session...' });
+
+      // Show the loading bar at least once
+      setTimeout(function () {
+        _this.set(JSON.parse(localStorage.getItem('main')));
+      }, 750);
+    }
+  },
+  data: { data: null, collapsed: [], pickyIsSelected: '' }
 });
 
 var input = new Ractive({
   el: '.grab',
-  template: '#grab',
+  template: templates.grab,
   data: localStorage.input ? JSON.parse(localStorage.getItem('input')) : {},
   onrender: function onrender() {
     var clipboard = new Clipboard('.btn-clipboard'); // Stop crying Firefox!
@@ -58,7 +76,7 @@ main.on('collapse', function (el) {
 });
 
 input.on('highlight', function (el, value) {
-  main.set('pickyIsSelected', 'data.' + formatSelected(value));
+  main.set('pickyIsSelected', 'data.' + formatSelected(value).replace(/^\./, ''));
 });
 
 // Test if JSON is valid and trigger notification if it's not
@@ -125,6 +143,19 @@ $(window).on('resize', function () {
   return $('textarea, .code-wrap').removeAttr('style');
 });
 
+var resetPickySelected = function resetPickySelected() {
+
+  if (!input.get('path')) return;
+
+  var path = formatSelected(input.get('path')).replace(/^\./, '');
+  var checkMain = main.get('data.' + path);
+
+  if (typeof checkMain === 'undefined') {
+    main.set('pickyIsSelected', '');
+    input.set('path', '');
+  }
+};
+
 // If a user is typing text into the textarea which is
 // a largely different length then what we have already
 // it's a good chance that it's a large JSON object that
@@ -147,6 +178,7 @@ var debounceText = function debounceText($this, timeout) {
 
     previousVal = $this.val();
     main.set('loading', false);
+    resetPickySelected();
   }, timeout);
 };
 
@@ -210,12 +242,6 @@ $('textarea').on('keyup', function () {
   previousVal = text;
 }).on('keydown', function (e) {
 
-  var text = $('textarea').val().trim();
-
-  if (text.length < 1) main.set({ data: '' });
-
-  if (text === previousVal) return;
-
   if (e.which === 9) {
     e.preventDefault();
     if (this.value) {
@@ -228,7 +254,7 @@ $('textarea').on('keyup', function () {
 
       if (e.shiftKey) {
         re = /^\t/gm;
-        count = -selected.match(re).length;
+        count = -selected.match(re) ? selected.match(re).length : '';
         this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end);
       } else {
         re = /^/gm;
