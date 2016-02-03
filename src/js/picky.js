@@ -94,7 +94,7 @@ $('.btn-example').click(() => {
     success: (data) => {
       $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco')
       main.set('pickyIsSelected', '')
-      main.reset({
+      main.set({
         data: JSON.parse(data)
       })
     },
@@ -145,12 +145,12 @@ const debounceText = ($this, timeout) => {
   textTimeout = setTimeout(() => {
 
     try {
-      main.reset({
+      main.set({
         data: JSON.parse($this.val())
       })
     } catch (error) {
       if (!$this.val().length) {
-        main.reset()
+        main.set({data: ''})
       }
     }
 
@@ -170,7 +170,7 @@ const debounceRequest = (contents, timeout) => {
     if (!$('textarea').val().length) return
 
     if (!$('textarea').val().match(urlRegex)) {
-      main.reset()
+      main.set({data: ''})
       return
     }
 
@@ -179,7 +179,7 @@ const debounceRequest = (contents, timeout) => {
       type: 'GET',
       dataType: 'json',
       success: (data) => {
-        main.reset({
+        main.set({
           data: typeof data === 'object' ? data : JSON.parse(data)
         })
       },
@@ -226,7 +226,7 @@ $('textarea').on('keyup', function() {
 
   let text = $('textarea').val().trim()
 
-  if ( text.length < 1 ) main.reset({ data: '' })
+  if ( text.length < 1 ) main.set({ data: '' })
 
   if (text === previousVal) return
 

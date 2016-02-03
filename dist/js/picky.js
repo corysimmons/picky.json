@@ -97,7 +97,7 @@ $('.btn-example').click(function () {
     success: function success(data) {
       $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco');
       main.set('pickyIsSelected', '');
-      main.reset({
+      main.set({
         data: JSON.parse(data)
       });
     },
@@ -148,12 +148,12 @@ var debounceText = function debounceText($this, timeout) {
   textTimeout = setTimeout(function () {
 
     try {
-      main.reset({
+      main.set({
         data: JSON.parse($this.val())
       });
     } catch (error) {
       if (!$this.val().length) {
-        main.reset();
+        main.set({ data: '' });
       }
     }
 
@@ -171,7 +171,7 @@ var debounceRequest = function debounceRequest(contents, timeout) {
     if (!$('textarea').val().length) return;
 
     if (!$('textarea').val().match(urlRegex)) {
-      main.reset();
+      main.set({ data: '' });
       return;
     }
 
@@ -180,7 +180,7 @@ var debounceRequest = function debounceRequest(contents, timeout) {
       type: 'GET',
       dataType: 'json',
       success: function success(data) {
-        main.reset({
+        main.set({
           data: (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' ? data : JSON.parse(data)
         });
       },
@@ -224,7 +224,7 @@ $('textarea').on('keyup', function () {
 
   var text = $('textarea').val().trim();
 
-  if (text.length < 1) main.reset({ data: '' });
+  if (text.length < 1) main.set({ data: '' });
 
   if (text === previousVal) return;
 
