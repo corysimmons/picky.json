@@ -143,6 +143,19 @@ $(window).on('resize', function () {
   return $('textarea, .code-wrap').removeAttr('style');
 });
 
+var resetPickySelected = function resetPickySelected() {
+
+  if (!input.get('path')) return;
+
+  var path = formatSelected(input.get('path')).replace(/^\./, '');
+  var checkMain = main.get('data.' + path);
+
+  if (typeof checkMain === 'undefined') {
+    main.set('pickyIsSelected', '');
+    input.set('path', '');
+  }
+};
+
 // If a user is typing text into the textarea which is
 // a largely different length then what we have already
 // it's a good chance that it's a large JSON object that
@@ -200,19 +213,6 @@ var debounceRequest = function debounceRequest(contents, timeout) {
       main.set('loading', false);
     });
   }, timeout);
-};
-
-var resetPickySelected = function resetPickySelected() {
-
-  if (!input.get('path')) return;
-
-  var path = formatSelected(input.get('path')).replace(/^\./, '');
-  var checkMain = main.get('data.' + path);
-
-  if (typeof checkMain === 'undefined') {
-    main.set('pickyIsSelected', '');
-    input.set('path', '');
-  }
 };
 
 // Test the input to see if it's a JSON url

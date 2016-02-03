@@ -141,6 +141,19 @@ $(window).on('resize', () =>
   $('textarea, .code-wrap').removeAttr('style')
 )
 
+const resetPickySelected = () => {
+
+  if (!input.get('path')) return
+
+  const path = formatSelected(input.get('path')).replace(/^\./, '')
+  const checkMain = main.get(`data.${path}`)
+
+  if (typeof checkMain === 'undefined') {
+    main.set('pickyIsSelected', '')
+    input.set('path', '')
+  }
+}
+
 // If a user is typing text into the textarea which is
 // a largely different length then what we have already
 // it's a good chance that it's a large JSON object that
@@ -201,19 +214,6 @@ const debounceRequest = (contents, timeout) => {
     })
 
   }, timeout)
-}
-
-const resetPickySelected = () => {
-
-  if (!input.get('path')) return
-
-  const path = formatSelected(input.get('path')).replace(/^\./, '')
-  const checkMain = main.get(`data.${path}`)
-
-  if (typeof checkMain === 'undefined') {
-    main.set('pickyIsSelected', '')
-    input.set('path', '')
-  }
 }
 
 // Test the input to see if it's a JSON url
