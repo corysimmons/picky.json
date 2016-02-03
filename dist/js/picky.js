@@ -209,6 +209,8 @@ $('textarea').on('keyup', function () {
 
   if (text === previousVal) return;
 
+  input.set('pickyIsSelected', '');
+
   clearTimeout(requestTimeout);
   if (text.match(urlRegex)) {
     main.set('loading', true);
