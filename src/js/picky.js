@@ -14,7 +14,20 @@ const main = new Ractive({
     attr: templates.attr,
     recurse: templates.recurse
   },
-  data: (localStorage.main ? JSON.parse(localStorage.getItem('main')) : { data: null, collapsed: [], pickyIsSelected: '' } )
+  onrender : function() {
+
+    if (localStorage.main) {
+      this.set({loading: true, loadingMessage: 'Loading JSON from your previous session...'})
+
+      // Show the loading bar at least once
+      setTimeout(() => {
+        this.set(JSON.parse(localStorage.getItem('main')))
+      }, 750)
+
+    }
+
+  },
+  data: { data: null, collapsed: [], pickyIsSelected: '' }
 })
 
 const input = new Ractive({
@@ -222,8 +235,6 @@ $('textarea').on('keyup', function() {
 
   if ( text.length < 1 ) main.set({ data: '' })
 
-  if (text === previousVal) return
-
   if (e.which === 9) {
     e.preventDefault()
     if (this.value) {
@@ -234,15 +245,18 @@ $('textarea').on('keyup', function() {
       let re = ''
       let count = ''
 
-      if (e.shiftKey) {
-        re = /^\t/gm
-        count = -selected.match(re).length
-        this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end)
-      } else {
-        re = /^/gm
-        count = selected.match(re).length
-        this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end)
+      if (selected) {
+        if (e.shiftKey) {
+          re = /^\t/gm
+          count = -selected.match(re).length
+          this.value = val.substring(0, start) + selected.replace(re, '') + val.substring(end)
+        } else {
+          re = /^/gm
+          count = selected.match(re).length
+          this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end)
+        }
       }
+
       if (start === end) {
         this.selectionStart = end + count
       } else {
