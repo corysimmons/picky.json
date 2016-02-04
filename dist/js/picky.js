@@ -52,7 +52,8 @@ var formatSelected = function formatSelected(path) {
 };
 
 var unformatSelected = function unformatSelected(path) {
-  return path.replace(/\.?([0-9]+)\.?/g, '[$1].') // Wraps number keys in brackets
+  return path.replace(/(^[0-9]+|\.[0-9]+)\.?/g, '[$1].') // Wraps number keys in brackets
+  .replace(/\[\./g, '\[') // Removes fullstops from within brackets
   .replace(/([a-z0-9]+\-+[a-z0-9]+)\.?/g, '["$1"].') // Moves keys with dashes into square brackets
   .replace(/\]\.\[/g, '][') // replace full stops where two brackets are next to eachother
   .replace(/\.$/, '') // Gets rid of trailing full stop
