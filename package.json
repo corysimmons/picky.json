@@ -5,6 +5,7 @@
     "styles:stylus": "stylus -m -u autoprefixer-stylus -w ./src/css/style.styl -o dist/css",
     "scripts:babel": "babel -s -w ./src/js/picky.js -o dist/js/picky.js",
     "copy:ractive": "cp ./node_modules/ractive/{ractive.js,ractive.js.map} dist/js/",
+    "copy:transitions": "cp ./node_modules/ractive-transitions-fade/dist/ractive-transitions-fade.umd.js dist/js/",
     "copy:jquery": "cp ./node_modules/jquery/dist/jquery.min.js dist/js/",
     "copy:clipboard": "cp ./node_modules/clipboard/dist/clipboard.js dist/js/",
     "copy:analytics": "cp ./src/js/analytics.js dist/js/",
@@ -44,6 +45,7 @@
     "clipboard": "^1.5.5",
     "jquery": "^2.2.0",
     "ractive": "git+https://github.com/ractivejs/ractive.git#edge",
+    "ractive-transitions-fade": "^0.3.1",
     "svgo": "^0.6.1"
   },
   "pre-commit": [

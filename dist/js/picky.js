@@ -43,6 +43,12 @@ var input = new Ractive({
   }
 });
 
+var warning = new Ractive({
+  el: '.error-container',
+  template: templates.error,
+  data: { error: null }
+});
+
 if (localStorage.text) {
   $('textarea').val(localStorage.getItem('text'));
 }
@@ -104,6 +110,7 @@ $('.btn-example').click(function () {
     success: function success(data) {
       $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco');
       main.set('pickyIsSelected', '');
+      warning.set({ 'error': null });
       main.set({
         data: JSON.parse(data)
       });
@@ -167,11 +174,17 @@ var debounceText = function debounceText($this, timeout) {
     try {
       main.set({
         data: JSON.parse($this.val())
+      }).then(function () {
+        warning.set('error', null);
       });
     } catch (error) {
       if (!$this.val().length) {
         main.set({ data: '' });
+        warning.set({ 'error': null });
+        return;
       }
+
+      if (!$('textarea').val().match(urlRegex)) warning.set('error.invalidJSON', true);
     }
 
     previousVal = $this.val();
@@ -185,7 +198,6 @@ var debounceText = function debounceText($this, timeout) {
 var requestTimeout = '';
 var debounceRequest = function debounceRequest(contents, timeout) {
   requestTimeout = setTimeout(function () {
-
     if (!$('textarea').val().length) return;
 
     if (!$('textarea').val().match(urlRegex)) {
@@ -201,11 +213,11 @@ var debounceRequest = function debounceRequest(contents, timeout) {
         main.set({
           data: (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' ? data : JSON.parse(data)
         });
+        warning.set({ 'error': null });
       },
-      error: function error() {
-        // Send textarea code to highlight.js <code> container
-        console.log('Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4');
+      error: function error(e) {
         main.set({ 'data': '' });
+        warning.set('error.code', e.status);
       }
     }).always(function () {
       main.set('loading', false);

@@ -37,6 +37,12 @@ const input = new Ractive({
   }
 })
 
+const warning = new Ractive({
+  el: '.error-container',
+  template: templates.error,
+  data: { error: null }
+})
+
 if (localStorage.text) {
   $('textarea').val(localStorage.getItem('text'))
 }
@@ -98,6 +104,7 @@ $('.btn-example').click(() => {
     success: (data) => {
       $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco')
       main.set('pickyIsSelected', '')
+      warning.set({'error': null})
       main.set({
         data: JSON.parse(data)
       })
@@ -161,11 +168,17 @@ const debounceText = ($this, timeout) => {
     try {
       main.set({
         data: JSON.parse($this.val())
+      }).then(() => {
+        warning.set('error', null)
       })
     } catch (error) {
       if (!$this.val().length) {
         main.set({data: ''})
+        warning.set({'error': null})
+        return
       }
+
+      if (!$('textarea').val().match(urlRegex)) warning.set('error.invalidJSON', true)
     }
 
     previousVal = $this.val()
@@ -194,11 +207,11 @@ const debounceRequest = (contents, timeout) => {
         main.set({
           data: typeof data === 'object' ? data : JSON.parse(data)
         })
+        warning.set({'error': null})
       },
-      error: () => {
-        // Send textarea code to highlight.js <code> container
-        console.log(`Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4`)
+      error: (e) => {
         main.set({'data': ''})
+        warning.set('error.code', e.status)
       }
     }).always(() => {
       main.set('loading', false)
