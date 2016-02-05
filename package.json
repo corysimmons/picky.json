@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "start": "npm run clean && ./node_modules/.bin/npm-run-all copy:* images:* --parallel server:* styles:* scripts:* watch:*",
-    "server:browser-sync": "./node_modules/.bin/browser-sync start --no-notify --no-open --server --files='**/*.html, dist/**/*'",
-    "styles:stylus": "./node_modules/.bin/stylus -m -u autoprefixer-stylus -w ./src/css/style.styl -o dist/css",
-    "scripts:babel": "./node_modules/.bin/babel -s -w ./src/js/picky.js -o dist/js/picky.js",
+    "start": "npm run clean && npm-run-all copy:* images:* --parallel server:* styles:* scripts:* watch:*",
+    "server:browser-sync": "browser-sync start --no-notify --no-open --server --files='**/*.html, dist/**/*'",
+    "styles:stylus": "stylus -m -u autoprefixer-stylus -w ./src/css/style.styl -o dist/css",
+    "scripts:babel": "babel -s -w ./src/js/picky.js -o dist/js/picky.js",
     "copy:ractive": "cp ./node_modules/ractive/{ractive.js,ractive.js.map} dist/js/",
     "copy:jquery": "cp ./node_modules/jquery/dist/jquery.min.js dist/js/",
     "copy:clipboard": "cp ./node_modules/clipboard/dist/clipboard.js dist/js/",
@@ -11,9 +11,9 @@
     "copy:images": "cp -R ./src/img dist",
     "images:svgo": "svgo -f dist/img",
     "clean": "rm -drf dist && mkdir -p ./dist/{js,css,img}",
-    "format:standard": "standard ./src/js/picky.js",
+    "format:standard": "standard ./src/js/picky.js | snazzy",
     "precompile": "node ./tasks/precompile.js",
-    "watch:templates": "./node_modules/watchman/watchman ./src/templates \"npm run precompile\""
+    "watch:templates": "watchman ./src/templates \"npm run precompile\""
   },
   "babel": {
     "presets": [
@@ -35,6 +35,7 @@
     "browser-sync": "^2.11.1",
     "npm-run-all": "^1.5.1",
     "pre-commit": "^1.1.2",
+    "snazzy": "^2.0.1",
     "standard": "^5.4.1",
     "stylus": "^0.53.0",
     "watchman": "^0.1.8"

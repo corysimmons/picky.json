@@ -198,10 +198,11 @@ const debounceRequest = (contents, timeout) => {
       error: () => {
         // Send textarea code to highlight.js <code> container
         console.log(`Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4`)
-        main.set($('textarea').val())
+        main.set({'data': ''})
       }
     }).always(() => {
       main.set('loading', false)
+      resetPickySelected()
     })
   }, timeout)
 }
