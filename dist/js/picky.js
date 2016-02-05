@@ -185,6 +185,7 @@ var debounceText = function debounceText($this, timeout) {
 var requestTimeout = '';
 var debounceRequest = function debounceRequest(contents, timeout) {
   requestTimeout = setTimeout(function () {
+
     if (!$('textarea').val().length) return;
 
     if (!$('textarea').val().match(urlRegex)) {
@@ -204,10 +205,11 @@ var debounceRequest = function debounceRequest(contents, timeout) {
       error: function error() {
         // Send textarea code to highlight.js <code> container
         console.log('Sorry for spamming the 💩 out of your console! https://github.com/corysimmons/picky.json/issues/4');
-        main.set($('textarea').val());
+        main.set({ 'data': '' });
       }
     }).always(function () {
       main.set('loading', false);
+      resetPickySelected();
     });
   }, timeout);
 };
