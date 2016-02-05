@@ -292,8 +292,7 @@ code.hljs {
   opacity: 0;
   width: 18px;
 }
-.invalid-json {
-  display: none;
+.error-message {
   position: absolute;
   bottom: 27px;
   left: 7px;
@@ -306,7 +305,7 @@ code.hljs {
   font-size: 0.75rem;
   text-align: center;
 }
-.invalid-json a {
+.error-message a {
   color: #fff;
   text-decoration: none;
   padding: 2px;
@@ -314,7 +313,7 @@ code.hljs {
   -webkit-transition: all 500ms ease;
   transition: all 500ms ease;
 }
-.invalid-json a:hover {
+.error-message a:hover {
   border-bottom-color: rgba(255,255,255,0.75);
 }
 .spinner {

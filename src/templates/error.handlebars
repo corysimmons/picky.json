@@ -1,0 +1,16 @@
+{{#if error}}
+  <div class="error-message" intro-outro="fade:300">
+    <p>
+      {{#if error.invalidJSON}}
+        JSON isn't valid. Picky won't work.
+        Check out <a href="http://jsonlint.com/" target="_blank">jsonlint.com</a> to find out exactly what's wrong.
+      {{else}}
+        {{#if error.code === 200 || error.code === 404}}
+          We couldn’t find valid JSON at that URL.
+        {{else}}
+          There was an issue, {{error.code}}.
+        {{/if}}
+      {{/if}}
+    </p>
+  </div>
+{{/if}}
