@@ -18,13 +18,11 @@ const main = new Ractive({
     if (localStorage.main) {
       this.set({loading: true, loadingMessage: 'Loading JSON from your previous session...'})
 
-      // Show the loading bar at least once
-      setTimeout(() => {
-        this.set(JSON.parse(localStorage.getItem('main')))
-      }, 750)
+      this.set(JSON.parse(localStorage.getItem('main')))
+      this.set('loading', false)
     }
   },
-  data: { data: null, collapsed: [], pickyIsSelected: '' }
+  data: {data: null, collapsed: [], pickyIsSelected: '', loading: true}
 })
 
 const input = new Ractive({
@@ -79,22 +77,6 @@ main.on('collapse', function (el) {
 input.on('highlight', function (el, value) {
   main.set('pickyIsSelected', 'data.' + formatSelected(value).replace(/^\./, ''))
 })
-
-// Test if JSON is valid and trigger notification if it's not
-const validNotification = () => {
-  if ($('textarea').val() !== '' && !$('textarea').val().match(urlRegex)) {
-    try {
-      $.parseJSON($('textarea').val())
-      $('.invalid-json').fadeOut()
-    } catch (err) {
-      $('.invalid-json').fadeIn()
-    }
-  } else {
-    $('.invalid-json').fadeOut()
-  }
-}
-
-setInterval(validNotification, 500)
 
 // Load example data
 $('.btn-example').click(() => {
@@ -161,7 +143,7 @@ const resetPickySelected = () => {
 // a largely different length then what we have already
 // it's a good chance that it's a large JSON object that
 // we'll need to debounce
-let previousVal = $('textarea').val()
+let previousVal = ''
 let textTimeout = ''
 const debounceText = ($this, timeout) => {
   textTimeout = setTimeout(() => {
@@ -192,10 +174,13 @@ const debounceText = ($this, timeout) => {
 let requestTimeout = ''
 const debounceRequest = (contents, timeout) => {
   requestTimeout = setTimeout(() => {
-    if (!$('textarea').val().length) return
+    if (!$('textarea').val().length) {
+      main.set('loading', false)
+      return
+    }
 
     if (!$('textarea').val().match(urlRegex)) {
-      main.set({data: ''})
+      main.set({data: '', loading: false})
       return
     }
 
@@ -205,12 +190,13 @@ const debounceRequest = (contents, timeout) => {
       dataType: 'json',
       success: (data) => {
         main.set({
-          data: typeof data === 'object' ? data : JSON.parse(data)
+          data: typeof data === 'object' ? data : JSON.parse(data),
+          loading: false
         })
         warning.set({'error': null})
       },
       error: (e) => {
-        main.set({'data': ''})
+        main.set({data: '', loading: false})
         warning.set('error.code', e.status)
       }
     }).always(() => {
@@ -220,10 +206,7 @@ const debounceRequest = (contents, timeout) => {
   }, timeout)
 }
 
-// Test the input to see if it's a JSON url
-// If it is, populate <code> with that data
-// If it's not, populate <code> with whatever is in <textarea>
-$('textarea').on('keyup', function () {
+function keyupEvent (message) {
   let text = $('textarea').val().trim()
 
   if (text === previousVal) return
@@ -237,7 +220,7 @@ $('textarea').on('keyup', function () {
   } else {
     if ($(this).val().length - previousVal.length > 500 || $(this).val().length - previousVal.length < -500) {
       main.set('loading', true)
-      main.set('loadingMessage', 'Loading large JSON changes...')
+      main.set('loadingMessage', message || 'Loading large JSON changes...')
       debounceText($(this), 2000)
     } else {
       debounceText($(this), 0)
@@ -245,6 +228,18 @@ $('textarea').on('keyup', function () {
   }
 
   previousVal = text
+}
+
+// Test the input to see if it's a JSON url
+// If it is, populate <code> with that data
+// If it's not, populate <code> with whatever is in <textarea>
+$('textarea').on('keyup change', function (e) {
+  if (e.type === 'change') {
+    main.set('loading', true)
+    keyupEvent.call(this, 'Loading data from extension...')
+  } else {
+    keyupEvent.call(this)
+  }
 }).on('keydown', function (e) {
   if (e.which === 9) {
     e.preventDefault()
@@ -276,12 +271,13 @@ $('textarea').on('keyup', function () {
 
   clearTimeout(requestTimeout)
   clearTimeout(textTimeout)
+  main.set('loading', false)
 })
 
 // Before unload, stores everything in localstorage, the input will only get stored int he local storage
 // if there is both a textarea value and data in the main component
 $(window).on('beforeunload', () => {
-  main.set('loading', false)
+  main.set('loading', true)
   if (!main.get('collapsed') || !main.get('collapsed').length) main.set('collapsed', [])
   localStorage.setItem('main', JSON.stringify(main.get() || { collapsed: [] }))
   localStorage.setItem('input', JSON.stringify($('textarea').val().length && main.get('data') ? input.get() : {}))
