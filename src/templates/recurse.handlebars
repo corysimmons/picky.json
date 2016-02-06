@@ -6,8 +6,9 @@
   }}
 
     {{#each context}}
+
       <div class="parent">
-        {{#if typeof this === 'object'}}
+        {{#if typeof this === 'object' && this !== null}}
           {{#if Array.isArray(this)}}
             <span class="hljs-attr{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">"{{@key}}"</span>:
             {{> 'array'}}
@@ -16,7 +17,7 @@
           {{/if}}
         {{else}}
           {{> 'attr'}}
-          <span class="{{#if typeof this == 'string'}}hljs-string{{else}}hljs-number{{/if}} {{~/pickyIsSelected === @keypath ? 'is-selected' : ''}}" on-click="showPath:{{@keypath}}">{{#if typeof this == 'string'}}"{{this}}"{{else}}{{this}}{{/if}}</span>{{#if @index < thisLength - 1 }},{{/if}}
+          <span class="{{#if typeof this == 'string'}}hljs-string{{else}}hljs-number{{/if}} {{~/pickyIsSelected === @keypath ? 'is-selected' : ''}}" on-click="showPath:{{@keypath}}">{{#if typeof this == 'string'}}"{{this}}"{{else}}{{this == null ? 'null' : this}}{{/if}}</span>{{#if @index < thisLength - 1 }},{{/if}}
         {{/if}}
       </div>
     {{/each}}
