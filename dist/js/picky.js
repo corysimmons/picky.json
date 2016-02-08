@@ -38,18 +38,22 @@ if (localStorage.text) {
 
 // Format the path so that Ractive understands it
 var formatSelected = function formatSelected(path) {
-  return path.replace(/\[/g, '.').replace(/\]\.?/g, '.').replace(/\.$/, '');
+  return path.replace(/[\"]/g, '').replace(/[\[\]]/g, '.').replace(/\.{2}/g, '.').replace(/^\./, '').replace(/\.$/, '');
 };
 
 // Format the JSON path so that it is valid for JS
 var unformatSelected = function unformatSelected(path) {
-  return path.replace(/(^[0-9]+|\.[0-9]+)\.?/g, '[$1].') // Wraps number keys in brackets
-  .replace(/\[\./g, '\[') // Removes fullstops from within brackets
-  .replace(/([a-z0-9]+\-+[a-z0-9]+)\.?/g, '["$1"].') // Moves keys with dashes into square brackets
-  .replace(/\]\.\[/g, '][') // replace full stops where two brackets are next to eachother
-  .replace(/\.$/, '') // Gets rid of trailing full stop
-  .replace(/(\[[0-9]*$)/, '$1]') // Adds the bracket to the end if needed
-  .replace(/(^[0-9]*\])/, '[$1'); // adds the bracket to the beginning if needed
+
+  var keypath = '';
+  var splitPath = path.split('.');
+
+  for (var i = 0; i < splitPath.length; i++) {
+
+    keypath += (splitPath[i].match(/(\d|\W)/g) ? '["' + splitPath[i] + '"]' : splitPath[i]) + '.';
+  }
+
+  return keypath.replace(/\.\[/g, '[').replace(/\]\.\[/g, '][') // replace full stops where two brackets are next to eachother
+  .replace(/\.$/, ''); // Gets rid of trailing full stop
 };
 
 // Triggered by a click event, gets us the clicked path name
