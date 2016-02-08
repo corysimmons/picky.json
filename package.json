@@ -10,7 +10,7 @@
     "copy:clipboard": "cp ./node_modules/clipboard/dist/clipboard.js dist/js/",
     "copy:analytics": "cp ./src/js/analytics.js dist/js/",
     "copy:images": "cp -R ./src/img dist",
-    "copy:picky-highlight": "cp ./node_modules/picky-highlight/dist/*.css ./dist/css/ && cp ./node_modules/picky-highlight/dist/*.js ./dist/js/",
+    "copy:picky-highlight": "cp ./node_modules/picky-highlight/dist/{picky-highlight.css,picky-highlight.css.map} ./dist/css/ && cp ./node_modules/picky-highlight/dist/{picky-highlight.js,picky-highlight.js.map} ./dist/js/",
     "images:svgo": "svgo -f dist/img",
     "clean": "rm -drf dist && mkdir -p ./dist/{js,css,img}",
     "format:standard": "standard ./src/js/picky.js | snazzy",
