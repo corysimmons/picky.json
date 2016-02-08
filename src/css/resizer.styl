@@ -1,0 +1,33 @@
+.resize
+  position: absolute
+  left: 0
+  top: -5px
+  height: 10px
+  width: 100%
+  cursor: row-resize
+  z-index: 2
+  @media (min-width: $tablet)
+    width: 10px
+    height: 100%
+    top: 0
+    left: -5px
+    cursor: col-resize
+
+.holder
+  background-color: #fcfcfc
+  position: absolute
+  border: 1px solid #ddd
+  border-radius: 4px
+  top: -1px
+  left: 50%
+  width: 30px
+  height: 10px
+  margin-left: -15px
+  margin-top: 0
+  @media (min-width: $tablet)
+    top: 50%
+    left: -1px
+    width: 10px
+    height: 30px
+    margin-top: -15px
+    margin-left: 0

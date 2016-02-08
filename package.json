@@ -2,7 +2,7 @@
   "scripts": {
     "start": "npm run clean && npm-run-all copy:* images:* --parallel server:* styles:* scripts:* watch:*",
     "server:browser-sync": "browser-sync start --no-notify --no-open --server --files='**/*.html, dist/**/*'",
-    "styles:stylus": "stylus -m -u autoprefixer-stylus -w ./src/css/style.styl -o dist/css",
+    "styles:stylus": "stylus -m -u autoprefixer-stylus -w ./src/css/base.styl -o dist/css/style.css",
     "scripts:babel": "babel -s -w ./src/js/picky.js -o dist/js/picky.js",
     "copy:ractive": "cp ./node_modules/ractive/{ractive.js,ractive.js.map} dist/js/",
     "copy:transitions": "cp ./node_modules/ractive-transitions-fade/dist/ractive-transitions-fade.umd.js dist/js/",
@@ -10,6 +10,7 @@
     "copy:clipboard": "cp ./node_modules/clipboard/dist/clipboard.js dist/js/",
     "copy:analytics": "cp ./src/js/analytics.js dist/js/",
     "copy:images": "cp -R ./src/img dist",
+    "copy:picky-highlight": "cp ./node_modules/picky-highlight/dist/*.css ./dist/css/ && cp ./node_modules/picky-highlight/dist/*.js ./dist/js/",
     "images:svgo": "svgo -f dist/img",
     "clean": "rm -drf dist && mkdir -p ./dist/{js,css,img}",
     "format:standard": "standard ./src/js/picky.js | snazzy",
@@ -24,6 +25,10 @@
   "standard": {
     "parser": "babel-eslint",
     "globals": [
+      "$",
+      "Ractive",
+      "Highlight",
+      "Clipboard",
       "templates",
       "localStorage"
     ]
@@ -44,6 +49,7 @@
   "dependencies": {
     "clipboard": "^1.5.5",
     "jquery": "^2.2.0",
+    "picky-highlight": "0.0.1",
     "ractive": "git+https://github.com/ractivejs/ractive.git#edge",
     "ractive-transitions-fade": "^0.3.1",
     "svgo": "^0.6.1"

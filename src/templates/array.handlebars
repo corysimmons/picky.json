@@ -1,7 +1,0 @@
-<span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">[</span><span class="collapsible" on-click="collapse">{{#if ~/collapsed.indexOf(@keypath) > -1 }}&#43;{{else}}&#45;{{/if}}</span>
-  {{#if ~/collapsed.indexOf(@keypath) > -1 }}
-    ...
-  {{else}}
-    {{> 'recurse'}}
-  {{/if}}
-<span class="hljs-wrap{{~/pickyIsSelected === @keypath ? ' is-selected' : ''}}" on-click="showPath:{{@keypath}}">]</span>{{#if @index < thisLength - 1}},{{/if}}

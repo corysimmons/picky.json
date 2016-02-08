@@ -2,33 +2,18 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-/* global Ractive, $, Clipboard */
-
-Ractive.DEBUG = false;
-
+// Expression for detecting of text input is a URL, then compile the regexp
 var expression = /^[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
 var urlRegex = new RegExp(expression);
 
-var main = new Ractive({
-  el: '.json',
-  template: templates.main,
-  partials: {
-    array: templates.array,
-    object: templates['object'],
-    attr: templates.attr,
-    recurse: templates.recurse
-  },
-  onrender: function onrender() {
-    if (localStorage.main) {
-      this.set({ loading: true, loadingMessage: 'Loading JSON from your previous session...' });
-
-      this.set(JSON.parse(localStorage.getItem('main')));
-      this.set('loading', false);
-    }
-  },
-  data: { data: null, collapsed: [], pickyIsSelected: '', loading: true }
+// Initialise the main template with default data, then onrender retrieve from localStorage giving us a
+// native 'Application Shell' like experience
+var main = new Highlight({
+  el: '#json',
+  debug: false
 });
 
+// Initialise the input template with localStorage data
 var input = new Ractive({
   el: '.grab',
   template: templates.grab,
@@ -39,20 +24,24 @@ var input = new Ractive({
   }
 });
 
+// Initialise the Warning template in a Ractive template
 var warning = new Ractive({
   el: '.error-container',
   template: templates.error,
   data: { error: null }
 });
 
+// If a value was previously in textarea, put it back!
 if (localStorage.text) {
   $('textarea').val(localStorage.getItem('text'));
 }
 
+// Format the path so that Ractive understands it
 var formatSelected = function formatSelected(path) {
   return path.replace(/\[/g, '.').replace(/\]\.?/g, '.').replace(/\.$/, '');
 };
 
+// Format the JSON path so that it is valid for JS
 var unformatSelected = function unformatSelected(path) {
   return path.replace(/(^[0-9]+|\.[0-9]+)\.?/g, '[$1].') // Wraps number keys in brackets
   .replace(/\[\./g, '\[') // Removes fullstops from within brackets
@@ -63,23 +52,14 @@ var unformatSelected = function unformatSelected(path) {
   .replace(/(^[0-9]*\])/, '[$1'); // adds the bracket to the beginning if needed
 };
 
-main.on('showPath', function (el, path) {
-  this.set('pickyIsSelected', path);
-  input.set('path', unformatSelected(path.replace(/^data./, '')));
+// Triggered by a click event, gets us the clicked path name
+main.on('showPath', function (oldVal, newVal) {
+  if (newVal) input.set('path', unformatSelected(newVal.replace(/^data./, '')));
 });
 
-main.on('collapse', function (el) {
-  if (!this.get('collapsed')) this.set('collapsed', []);
-
-  if (this.get('collapsed').indexOf(el.keypath) > -1) {
-    this.splice('collapsed', this.get('collapsed').indexOf(el.keypath), 1);
-  } else {
-    this.push('collapsed', el.keypath);
-  }
-});
-
+// Keup event from the grab.handlebars input, highlights the typed value
 input.on('highlight', function (el, value) {
-  main.set('pickyIsSelected', 'data.' + formatSelected(value).replace(/^\./, ''));
+  main.set('isSelected', 'data.' + formatSelected(value).replace(/^\./, ''));
 });
 
 // Load example data
@@ -89,7 +69,7 @@ $('.btn-example').click(function () {
     url: 'https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco',
     success: function success(data) {
       $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco');
-      main.set('pickyIsSelected', '');
+      main.set('isSelected', '');
       warning.set({ 'error': null });
       main.set({
         data: JSON.parse(data)
@@ -107,11 +87,13 @@ var resizer = function resizer(offset, field, max) {
   }
 };
 
+// On mousedown / touchstart show that we are in 'resizing mode'
 var resizing = false;
 $('.resize').on('mousedown touchstart', function () {
   resizing = true;
 });
 
+// On mousemove or touchmove i.e. dragging the resizer either horiz or vert depending on breakpoint i.e. 1000
 $(document).on('mousemove touchmove', function (e) {
   if (!resizing) {
     return;
@@ -126,11 +108,13 @@ $(document).on('mousemove touchmove', function (e) {
   resizing = false;
 });
 
-// Remove the resize styles on window change so it doesn't get wierd
+// Remove the resize styles on window change so it doesn't get weird
 $(window).on('resize', function () {
   return $('textarea, .code-wrap').removeAttr('style');
 });
 
+// Checks to see if the selected picky value is in the data, if not it will will remove the highlighting
+// and value from the input.
 var resetPickySelected = function resetPickySelected() {
   if (!input.get('path')) return;
 
@@ -138,7 +122,7 @@ var resetPickySelected = function resetPickySelected() {
   var checkMain = main.get('data.' + path);
 
   if (typeof checkMain === 'undefined') {
-    main.set('pickyIsSelected', '');
+    main.set('isSelected', '');
     input.set('path', '');
   }
 };
@@ -153,13 +137,14 @@ var debounceText = function debounceText($this, timeout) {
   textTimeout = setTimeout(function () {
     try {
       main.set({
-        data: JSON.parse($this.val())
+        data: JSON.parse($this.val()),
+        loading: false
       }).then(function () {
         warning.set('error', null);
       });
     } catch (error) {
       if (!$this.val().length) {
-        main.set({ data: '' });
+        main.set({ data: '', loading: false });
         warning.set({ 'error': null });
         return;
       }
@@ -178,7 +163,6 @@ var debounceText = function debounceText($this, timeout) {
 var requestTimeout = '';
 var debounceRequest = function debounceRequest(contents, timeout) {
   requestTimeout = setTimeout(function () {
-
     if (!$('textarea').val().length) {
       main.set('loading', false);
       return;
@@ -239,9 +223,7 @@ function keyupEvent(message) {
 // If it is, populate <code> with that data
 // If it's not, populate <code> with whatever is in <textarea>
 $('textarea').on('keyup change', function (e) {
-
   if (e.type === 'change') {
-
     main.set('loading', true);
     keyupEvent.call(this, 'Loading data from extension...');
   } else {
@@ -284,17 +266,8 @@ $('textarea').on('keyup change', function (e) {
 // Before unload, stores everything in localstorage, the input will only get stored int he local storage
 // if there is both a textarea value and data in the main component
 $(window).on('beforeunload', function () {
-  main.set('loading', true);
-  if (!main.get('collapsed') || !main.get('collapsed').length) main.set('collapsed', []);
-  localStorage.setItem('main', JSON.stringify(main.get() || { collapsed: [] }));
   localStorage.setItem('input', JSON.stringify($('textarea').val().length && main.get('data') ? input.get() : {}));
   localStorage.setItem('text', $('textarea').val());
-});
-
-$(document).on('mouseenter', '.hljs-wrap, .hljs-attr, .collapsible', function () {
-  $(this).closest('.parent').addClass('active-collapse');
-}).on('mouseout', '.hljs-wrap, .hljs-attr, .collapsible', function () {
-  $('.active-collapse').removeClass('active-collapse');
 });
 
 //# sourceMappingURL=picky.js.map
