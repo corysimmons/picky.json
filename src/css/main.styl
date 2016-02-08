@@ -1,0 +1,89 @@
+code, textarea
+  font-family: 'Roboto Mono', sans-serif
+  line-height: 1.75
+  tab-size: 2
+  font-size: .75rem
+
+main
+  cf()
+  height: calc(100vh - 60px)
+  width: 100%
+  overflow: hidden
+  @media (min-width: $tablet)
+    height: calc(100vh - 75px)
+
+textarea
+  border: 0
+  width: 100%
+  height: 20vh
+  outline: 0
+  resize: none
+  padding: 15px
+  @media (min-width: $tablet)
+    border-bottom: 0
+    float: left
+    width: 50%
+    height: calc(100vh - 75px)
+
+.code-wrap
+  height: calc(100vh - 20vh - 60px)
+  position: relative
+  border-top: 1px solid darken(white, 10%)
+  @media (min-width: $tablet)
+    border-left: 1px solid darken(white, 10%)
+    height: calc(100vh - 70px)
+    margin-top: 0
+    float: left
+    width: 50%
+
+pre
+  height: 100%
+
+code
+  display: block
+  overflow: scroll
+  height: calc(100% - 57px)
+  padding: 15px
+  overflow: scroll
+  background:#FFF;
+  color:#333;
+  overflow-x:auto;
+
+.grab
+  height: 50px
+  position: relative
+  input
+    width: 100%
+    border: 0
+    border-bottom: 1px solid darken(white, 10%)
+    outline: 0
+    padding: 0 10px
+    font-size: .75rem
+    height: 50px
+    line-height: 50px
+    font-weight: 500
+    color: lighten(black, 30%)
+    &:placeholder-shown
+      font-weight: 300
+  .btn-clipboard
+    position: absolute
+    right: 0
+    top: 0
+    bottom: 0
+    margin: 0
+    padding: 0 30px
+    border: 1px solid darken(white, 10%)
+    border-top: 0
+    border-right: 0
+    background: darken(white, 5%)
+    color: darken(white, 50%)
+    text-transform: uppercase
+    trans()
+    outline: none
+    font-size: .65rem
+    letter-spacing: .15em
+    cursor: pointer
+    &:hover
+      background: darken(white, 6%)
+    &:active
+      background: darken(white, 10%)

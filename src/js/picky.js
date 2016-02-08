@@ -1,30 +1,15 @@
-/* global Ractive, $, Clipboard */
-
-Ractive.DEBUG = false
-
+// Expression for detecting of text input is a URL, then compile the regexp
 const expression = /^[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
 const urlRegex = new RegExp(expression)
 
-const main = new Ractive({
-  el: '.json',
-  template: templates.main,
-  partials: {
-    array: templates.array,
-    object: templates['object'],
-    attr: templates.attr,
-    recurse: templates.recurse
-  },
-  onrender: function () {
-    if (localStorage.main) {
-      this.set({loading: true, loadingMessage: 'Loading JSON from your previous session...'})
-
-      this.set(JSON.parse(localStorage.getItem('main')))
-      this.set('loading', false)
-    }
-  },
-  data: {data: null, collapsed: [], pickyIsSelected: '', loading: true}
+// Initialise the main template with default data, then onrender retrieve from localStorage giving us a
+// native 'Application Shell' like experience
+const main = new Highlight({
+  el: '#json',
+  debug: false
 })
 
+// Initialise the input template with localStorage data
 const input = new Ractive({
   el: '.grab',
   template: templates.grab,
@@ -35,20 +20,24 @@ const input = new Ractive({
   }
 })
 
+// Initialise the Warning template in a Ractive template
 const warning = new Ractive({
   el: '.error-container',
   template: templates.error,
   data: { error: null }
 })
 
+// If a value was previously in textarea, put it back!
 if (localStorage.text) {
   $('textarea').val(localStorage.getItem('text'))
 }
 
+// Format the path so that Ractive understands it
 const formatSelected = (path) => {
   return path.replace(/\[/g, '.').replace(/\]\.?/g, '.').replace(/\.$/, '')
 }
 
+// Format the JSON path so that it is valid for JS
 const unformatSelected = (path) => {
   return path.replace(/(^[0-9]+|\.[0-9]+)\.?/g, '[$1].') // Wraps number keys in brackets
     .replace(/\[\./g, '\[') // Removes fullstops from within brackets
@@ -59,23 +48,14 @@ const unformatSelected = (path) => {
     .replace(/(^[0-9]*\])/, '[$1') // adds the bracket to the beginning if needed
 }
 
-main.on('showPath', function (el, path) {
-  this.set('pickyIsSelected', path)
-  input.set('path', unformatSelected(path.replace(/^data./, '')))
+// Triggered by a click event, gets us the clicked path name
+main.on('showPath', (oldVal, newVal) => {
+  if (newVal) input.set('path', unformatSelected(newVal.replace(/^data./, '')))
 })
 
-main.on('collapse', function (el) {
-  if (!this.get('collapsed')) this.set('collapsed', [])
-
-  if (this.get('collapsed').indexOf(el.keypath) > -1) {
-    this.splice('collapsed', this.get('collapsed').indexOf(el.keypath), 1)
-  } else {
-    this.push('collapsed', el.keypath)
-  }
-})
-
+// Keup event from the grab.handlebars input, highlights the typed value
 input.on('highlight', function (el, value) {
-  main.set('pickyIsSelected', 'data.' + formatSelected(value).replace(/^\./, ''))
+  main.set('isSelected', 'data.' + formatSelected(value).replace(/^\./, ''))
 })
 
 // Load example data
@@ -85,7 +65,7 @@ $('.btn-example').click(() => {
     url: 'https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco',
     success: (data) => {
       $('textarea').val('https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco')
-      main.set('pickyIsSelected', '')
+      main.set('isSelected', '')
       warning.set({'error': null})
       main.set({
         data: JSON.parse(data)
@@ -103,11 +83,13 @@ const resizer = (offset, field, max) => {
   }
 }
 
+// On mousedown / touchstart show that we are in 'resizing mode'
 let resizing = false
 $('.resize').on('mousedown touchstart', () => {
   resizing = true
 })
 
+// On mousemove or touchmove i.e. dragging the resizer either horiz or vert depending on breakpoint i.e. 1000
 $(document).on('mousemove touchmove', (e) => {
   if (!resizing) {
     return
@@ -122,11 +104,13 @@ $(document).on('mousemove touchmove', (e) => {
   resizing = false
 })
 
-// Remove the resize styles on window change so it doesn't get wierd
+// Remove the resize styles on window change so it doesn't get weird
 $(window).on('resize', () =>
   $('textarea, .code-wrap').removeAttr('style')
 )
 
+// Checks to see if the selected picky value is in the data, if not it will will remove the highlighting
+// and value from the input.
 const resetPickySelected = () => {
   if (!input.get('path')) return
 
@@ -134,7 +118,7 @@ const resetPickySelected = () => {
   const checkMain = main.get(`data.${path}`)
 
   if (typeof checkMain === 'undefined') {
-    main.set('pickyIsSelected', '')
+    main.set('isSelected', '')
     input.set('path', '')
   }
 }
@@ -149,13 +133,14 @@ const debounceText = ($this, timeout) => {
   textTimeout = setTimeout(() => {
     try {
       main.set({
-        data: JSON.parse($this.val())
+        data: JSON.parse($this.val()),
+        loading: false
       }).then(() => {
         warning.set('error', null)
       })
     } catch (error) {
       if (!$this.val().length) {
-        main.set({data: ''})
+        main.set({data: '', loading: false})
         warning.set({'error': null})
         return
       }
@@ -277,15 +262,6 @@ $('textarea').on('keyup change', function (e) {
 // Before unload, stores everything in localstorage, the input will only get stored int he local storage
 // if there is both a textarea value and data in the main component
 $(window).on('beforeunload', () => {
-  main.set('loading', true)
-  if (!main.get('collapsed') || !main.get('collapsed').length) main.set('collapsed', [])
-  localStorage.setItem('main', JSON.stringify(main.get() || { collapsed: [] }))
   localStorage.setItem('input', JSON.stringify($('textarea').val().length && main.get('data') ? input.get() : {}))
   localStorage.setItem('text', $('textarea').val())
-})
-
-$(document).on('mouseenter', '.hljs-wrap, .hljs-attr, .collapsible', function () {
-  $(this).closest('.parent').addClass('active-collapse')
-}).on('mouseout', '.hljs-wrap, .hljs-attr, .collapsible', () => {
-  $('.active-collapse').removeClass('active-collapse')
 })
