@@ -3,8 +3,6 @@ var fs = require('fs'),
 
 readFiles('src/templates/').then(function (data){
 
-
-
   fs.writeFile("./dist/js/templates.js", 'var templates = ' + JSON.stringify(data), function(err) {
 
     if(err) {
