@@ -75,7 +75,7 @@ textarea {
   font-size: 0.75rem;
 }
 #json {
-  height: 100%;
+  height: calc(100% - 55px);
   overflow: auto;
 }
 main {
@@ -128,13 +128,10 @@ pre {
 }
 code {
   display: block;
-  overflow: scroll;
   height: calc(100% - 57px);
   padding: 15px;
-  overflow: scroll;
   background: #fff;
   color: #333;
-  overflow-x: auto;
 }
 .grab {
   height: 50px;

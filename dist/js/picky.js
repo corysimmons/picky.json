@@ -43,12 +43,10 @@ var formatSelected = function formatSelected(path) {
 
 // Format the JSON path so that it is valid for JS
 var unformatSelected = function unformatSelected(path) {
-
   var keypath = '';
   var splitPath = path.split('.');
 
-  for (var i = 0; i < splitPath.length; i++) {
-
+  for (var i = 0, ii = splitPath.length; i < ii; i++) {
     keypath += (splitPath[i].match(/(\d|\W)/g) ? '["' + splitPath[i] + '"]' : splitPath[i]) + '.';
   }
 
