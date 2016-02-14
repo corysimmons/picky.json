@@ -115,7 +115,7 @@ $(document).on('mousemove touchmove', function (e) {
     return;
   }
   if (document.querySelector('body').clientWidth >= 1000) {
-    resizer(e.pageX / document.querySelector('main').clientWidth * 100, 'width', 10);
+    resizer(e.pageX / document.querySelector('main').clientWidth * 100, 'width', 12);
   } else {
     resizer((e.originalEvent.pageY || e.originalEvent.touches[0].pageY) / document.querySelector('body').clientHeight * 100 - 5, 'height', 20);
     return false;
