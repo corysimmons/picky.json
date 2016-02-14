@@ -20,8 +20,18 @@ var input = new Ractive({
   data: localStorage.input ? JSON.parse(localStorage.getItem('input')) : {},
   onrender: function onrender() {
     var clipboard = new Clipboard('.btn-clipboard'); // Stop crying Firefox!
-    clipboard; // stop crying StandardJS!
+    clipboard.on('success', function (e) {
+      $(e.trigger).addClass('active');
+    });
   }
+});
+
+$('.btn-clipboard').on('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', function (e) {
+  var _this = this;
+
+  setTimeout(function () {
+    $(_this).removeClass('active');
+  }, 400);
 });
 
 // Initialise the Warning template in a Ractive template
@@ -62,6 +72,10 @@ main.on('showPath', function (oldVal, newVal) {
 // Keup event from the grab.handlebars input, highlights the typed value
 input.on('highlight', function (el, value) {
   main.set('isSelected', 'data.' + formatSelected(value).replace(/^\./, ''));
+});
+
+input.on('copyValue', function (el, value) {
+  input.set('hidden', JSON.stringify(main.get('data.' + formatSelected(value).replace(/^\./, '') || {})));
 });
 
 // Load example data

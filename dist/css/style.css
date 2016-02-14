@@ -138,7 +138,7 @@ code {
   position: relative;
 }
 .grab input {
-  width: 100%;
+  width: calc(100% - 110px);
   border: 0;
   border-bottom: 1px solid #e6e6e6;
   outline: 0;
@@ -147,36 +147,25 @@ code {
   height: 50px;
   line-height: 50px;
   font-weight: 500;
+  float: left;
   color: #4d4d4d;
 }
 .grab input:placeholder-shown {
   font-weight: 300;
 }
-.grab .btn-clipboard {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 0 30px;
-  border: 1px solid #e6e6e6;
-  border-top: 0;
-  border-right: 0;
-  background: #f2f2f2;
-  color: #808080;
-  text-transform: uppercase;
-  -webkit-transition: all 200ms ease;
-  transition: all 200ms ease;
-  outline: none;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  cursor: pointer;
+.dropdown {
+  position: relative;
+  width: 110px;
+  height: 50px;
+  float: left;
+  background-color: #f2f2f2;
 }
-.grab .btn-clipboard:hover {
-  background: #f0f0f0;
+.dropdown:hover button:nth-child(2) {
+  display: block;
 }
-.grab .btn-clipboard:active {
-  background: #e6e6e6;
+.dropdown button:nth-child(2) {
+  top: 100%;
+  display: none;
 }
 .btn-example {
   cursor: pointer;
@@ -202,6 +191,70 @@ code {
 @media (min-width: 1000px) {
   .btn-example {
     margin-top: 26px;
+  }
+}
+.btn-clipboard {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0 15px;
+  border: 0;
+  border: 1px solid #e6e6e6;
+  border-top: 0;
+  border-right: 0;
+  background: #f2f2f2;
+  color: #808080;
+  text-transform: uppercase;
+  -webkit-transition: all 200ms ease;
+  transition: all 200ms ease;
+  outline: none;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+}
+.btn-clipboard:hover {
+  background: #e8e8e8;
+}
+.btn-clipboard:active {
+  background: #e0e0e0;
+}
+.btn-clipboard.active {
+  background-color: #27ae60;
+  color: #27ae60;
+  border: 1px solid #27ae60;
+}
+.btn-clipboard.active:after {
+  content: 'Copied!';
+  display: block;
+  color: #fff;
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%) translateY(100%);
+          transform: translateX(-50%) translateY(100%);
+  -webkit-animation: slideUp 200ms forwards cubic-bezier(0.87, -0.41, 0.19, 1.44);
+          animation: slideUp 200ms forwards cubic-bezier(0.87, -0.41, 0.19, 1.44);
+}
+@-webkit-keyframes slideUp {
+  from {
+    -webkit-transform: translateX(-50%) translateY(100%);
+            transform: translateX(-50%) translateY(100%);
+  }
+  to {
+    -webkit-transform: translateX(-50%) translateY(-95%);
+            transform: translateX(-50%) translateY(-95%);
+  }
+}
+@keyframes slideUp {
+  from {
+    -webkit-transform: translateX(-50%) translateY(100%);
+            transform: translateX(-50%) translateY(100%);
+  }
+  to {
+    -webkit-transform: translateX(-50%) translateY(-95%);
+            transform: translateX(-50%) translateY(-95%);
   }
 }
 .error-message {
