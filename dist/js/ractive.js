@@ -1,6 +1,6 @@
 /*
 	Ractive.js v0.8.0-edge
-	Mon Feb 01 2016 12:30:31 GMT+0000 (UTC) - commit 131a942a5a75e1b9e3589f58f2348fb03606d262
+	Tue Feb 09 2016 15:18:39 GMT+0000 (UTC) - commit 9766109caa6d56fe4b2a70d355b1830169394507
 
 	http://ractivejs.org
 	http://twitter.com/RactiveJS
@@ -5263,7 +5263,7 @@ var classCallCheck = function (instance, Constructor) {
   	return KeypathModel;
   })();
 
-  var hasProp = Object.prototype.hasOwnProperty;
+  var hasProp$1 = Object.prototype.hasOwnProperty;
 
   function _updateFromBindings(model) {
   	model.updateFromBindings(true);
@@ -5310,8 +5310,12 @@ var classCallCheck = function (instance, Constructor) {
 
   	Model.prototype.adapt = function adapt() {
   		var adaptors = this.root.adaptors;
-  		var value = this.value;
   		var len = adaptors.length;
+
+  		// Exit early if no adaptors
+  		if (len === 0) return;
+
+  		var value = this.value;
 
   		// TODO remove this legacy nonsense
   		var ractive = this.root.ractive;
@@ -5572,12 +5576,12 @@ var classCallCheck = function (instance, Constructor) {
   		if (!value) return false;
 
   		key = unescapeKey(key);
-  		if (hasProp.call(value, key)) return true;
+  		if (hasProp$1.call(value, key)) return true;
 
   		// We climb up the constructor chain to find if one of them contains the key
   		var constructor = value.constructor;
   		while (constructor !== Function && constructor !== Array && constructor !== Object) {
-  			if (hasProp.call(constructor.prototype, key)) return true;
+  			if (hasProp$1.call(constructor.prototype, key)) return true;
   			constructor = constructor.constructor;
   		}
 
@@ -6553,8 +6557,6 @@ var classCallCheck = function (instance, Constructor) {
   	}
 
   	Partial.prototype.bind = function bind() {
-  		_Mustache.prototype.bind.call(this);
-
   		// keep track of the reference name for future resets
   		this.refName = this.template.r;
 
@@ -6565,15 +6567,20 @@ var classCallCheck = function (instance, Constructor) {
   		if (template) {
   			this.named = true;
   			this.setTemplate(this.template.r, template);
-  		} else if (this.model && (templateObj = this.model.get()) && typeof templateObj === 'object' && (typeof templateObj.template === 'string' || isArray(templateObj.t))) {
-  			if (templateObj.template) {
-  				templateObj = parsePartial(this.template.r, templateObj.template, this.ractive);
+  		}
+
+  		if (!template) {
+  			_Mustache.prototype.bind.call(this);
+  			if (this.model && (templateObj = this.model.get()) && typeof templateObj === 'object' && (typeof templateObj.template === 'string' || isArray(templateObj.t))) {
+  				if (templateObj.template) {
+  					templateObj = parsePartial(this.template.r, templateObj.template, this.ractive);
+  				}
+  				this.setTemplate(this.template.r, templateObj.t);
+  			} else if ((!this.model || typeof this.model.get() !== 'string') && this.refName) {
+  				this.setTemplate(this.refName, template);
+  			} else {
+  				this.setTemplate(this.model.get());
   			}
-  			this.setTemplate(this.template.r, templateObj.t);
-  		} else if ((!this.model || typeof this.model.get() !== 'string') && this.refName) {
-  			this.setTemplate(this.refName, template);
-  		} else {
-  			this.setTemplate(this.model.get());
   		}
 
   		this.fragment = new Fragment({
@@ -11770,6 +11777,8 @@ var classCallCheck = function (instance, Constructor) {
   	return RactiveModel;
   })(Model);
 
+  var hasProp = Object.prototype.hasOwnProperty;
+
   var RootModel = (function (_Model) {
   	inherits(RootModel, _Model);
 
@@ -11859,7 +11868,21 @@ var classCallCheck = function (instance, Constructor) {
   	};
 
   	RootModel.prototype.has = function has(key) {
-  		return key in this.mappings || key in this.computations || _Model.prototype.has.call(this, key);
+  		if (key in this.mappings || key in this.computations) return true;
+
+  		var value = this.value;
+
+  		key = unescapeKey(key);
+  		if (hasProp.call(value, key)) return true;
+
+  		// We climb up the constructor chain to find if one of them contains the key
+  		var constructor = value.constructor;
+  		while (constructor !== Function && constructor !== Array && constructor !== Object) {
+  			if (hasProp.call(constructor.prototype, key)) return true;
+  			constructor = constructor.constructor;
+  		}
+
+  		return false;
   	};
 
   	RootModel.prototype.joinKey = function joinKey(key) {

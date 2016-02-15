@@ -49,7 +49,7 @@
   "dependencies": {
     "clipboard": "^1.5.5",
     "jquery": "^2.2.0",
-    "picky-highlight": "0.0.1",
+    "picky-highlight": "0.0.2",
     "ractive": "git+https://github.com/ractivejs/ractive.git#edge",
     "ractive-transitions-fade": "^0.3.1",
     "svgo": "^0.6.1"

@@ -169,7 +169,7 @@ code {
 .dropdown:hover button {
   display: block;
 }
-.btn-example {
+.btn-ghost {
   cursor: pointer;
   float: right;
   padding: 5px 10px;
@@ -183,15 +183,38 @@ code {
   outline: 0;
   margin-top: 18px;
   font-weight: 300;
+  position: relative;
 }
-.btn-example:hover {
+.btn-ghost:hover {
   background: rgba(255,255,255,0.05);
 }
-.btn-example:active {
+.btn-ghost:active {
   background: rgba(220,36,48,0.05);
 }
+.btn-ghost ~ .btn-ghost {
+  margin-right: 8px;
+}
+.btn-ghost.extension {
+  padding-left: 30px;
+  text-decoration: none;
+}
+.btn-ghost.extension:before {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: url("/dist/img/extension.png") no-repeat center;
+  background-size: cover;
+  left: 8px;
+}
+@media (max-width: 460px) {
+  .btn-ghost.extension {
+    display: none;
+  }
+}
 @media (min-width: 1000px) {
-  .btn-example {
+  .btn-ghost {
     margin-top: 26px;
   }
 }

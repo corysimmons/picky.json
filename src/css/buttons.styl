@@ -1,4 +1,4 @@
-.btn-example
+.btn-ghost
   cursor: pointer
   float: right
   padding: 5px 10px
@@ -11,10 +11,27 @@
   outline: 0
   margin-top: 18px
   font-weight: 300
+  position: relative
   &:hover
     background: rgba(white, 5%)
   &:active
     background: rgba(#dc2430, 5%)
+  ~ .btn-ghost
+    margin-right: 8px
+  &.extension
+    padding-left: 30px
+    text-decoration: none
+    &:before
+      content: ''
+      display: block
+      position: absolute;
+      width: 15px
+      height: 15px
+      background: url('/dist/img/extension.png') no-repeat center
+      background-size: cover
+      left: 8px
+    @media(max-width: $mobile)
+      display: none
   @media (min-width: $tablet)
     margin-top: 26px
 

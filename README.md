@@ -6,6 +6,7 @@
 #### Develop
 - `npm start`
 - `npm run format:standard` before submitting a PR
+ - There is also a github pre-commit hook to make sure you do this
 
 #### Templates
 
