@@ -17,3 +17,43 @@
     background: rgba(#dc2430, 5%)
   @media (min-width: $tablet)
     margin-top: 26px
+
+.btn-clipboard
+  position: relative
+  height: 100%
+  width: 100%
+  margin: 0
+  padding: 0 15px
+  border: 0
+  border-bottom: 1px solid darken(white, 10%)
+  border-left: 1px solid darken(white, 10%)
+  background: darken(white, 5%)
+  color: darken(white, 50%)
+  text-transform: uppercase
+  trans()
+  outline: none
+  font-size: .65rem
+  letter-spacing: .15em
+  cursor: pointer
+  &:hover
+    background: darken(white, 9%)
+  &:active
+    background: darken(white, 12%)
+  &.active
+    background-color: #27ae60
+    color: #27ae60
+    border: 1px solid #27ae60
+    &:after
+      content: 'Copied!'
+      display: block
+      color: white
+      position: absolute
+      left: 50%
+      transform: translateX(-50%) translateY(100%)
+      animation: slideUp 200ms forwards cubic-bezier(.87,-.41,.19,1.44)
+
+@keyframes slideUp
+  from
+    transform: translateX(-50%) translateY(100%)
+  to
+    transform: translateX(-50%) translateY(-95%)

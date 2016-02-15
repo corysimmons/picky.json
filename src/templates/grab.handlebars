@@ -1,2 +1,5 @@
 <input id="picked" type="text" class="input" placeholder="Click something or type a selector" value="{{path}}" on-keyup="highlight:{{path}}"/>
-<button class="btn-clipboard" data-clipboard-target="#picked">Copy</button>
+<div class="dropdown">
+  <button class="btn-clipboard" data-clipboard-target="#picked">Copy Path</button>
+  <button class="btn-clipboard" data-clipboard-text="{{hidden}}" on-click="copyValue:{{path}}">Copy Value</button>
+</div>
