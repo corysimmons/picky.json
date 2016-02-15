@@ -74,9 +74,10 @@ code
   height: 50px
   float: left
   background-color: #F2F2F2
-  &:hover
-    button:nth-child(2)
-      display: block
-  button:nth-child(2)
-    top: 100%
+  button
     display: none
+    &:first-child
+      display: block
+  &:hover
+    button
+      display: block

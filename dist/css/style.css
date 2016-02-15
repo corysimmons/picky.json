@@ -160,12 +160,14 @@ code {
   float: left;
   background-color: #f2f2f2;
 }
-.dropdown:hover button:nth-child(2) {
+.dropdown button {
+  display: none;
+}
+.dropdown button:first-child {
   display: block;
 }
-.dropdown button:nth-child(2) {
-  top: 100%;
-  display: none;
+.dropdown:hover button {
+  display: block;
 }
 .btn-example {
   cursor: pointer;
@@ -194,9 +196,6 @@ code {
   }
 }
 .btn-clipboard {
-  position: absolute;
-  right: 0;
-  top: 0;
   height: 100%;
   width: 100%;
   margin: 0;
