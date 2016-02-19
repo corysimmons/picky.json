@@ -78,7 +78,7 @@ input.on('copyValue', function (el, value) {
 })
 
 // Load example data
-$('.btn-example').click(() => {
+$('#example').click(() => {
   $('#picked').val('')
   $.ajax({
     url: 'https://maps.googleapis.com/maps/api/geocode/json?address=San%20Francisco',
