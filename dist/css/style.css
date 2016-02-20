@@ -236,6 +236,7 @@ code {
   font-size: 0.65rem;
   letter-spacing: 0.15em;
   cursor: pointer;
+  z-index: 3;
 }
 .btn-clipboard:hover {
   background: #e8e8e8;
