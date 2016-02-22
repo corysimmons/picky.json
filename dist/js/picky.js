@@ -214,7 +214,10 @@ var debounceRequest = function debounceRequest(contents, timeout) {
 function keyupEvent(message) {
   var text = $('textarea').val().trim();
 
-  if (text === previousVal) return;
+  if (text === previousVal) {
+    main.set('loading', false);
+    return;
+  }
 
   clearTimeout(requestTimeout);
   clearTimeout(textTimeout);
@@ -276,7 +279,6 @@ $('textarea').on('keyup change', function (e) {
 
   clearTimeout(requestTimeout);
   clearTimeout(textTimeout);
-  main.set('loading', false);
 });
 
 // Before unload, stores everything in localstorage, the input will only get stored int he local storage
