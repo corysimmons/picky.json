@@ -28,8 +28,8 @@
 
   var spinner = '\n  <div class="default-spinner">\n    <div class="rect1"></div>\n    <div class="rect2"></div>\n    <div class="rect3"></div>\n    <div class="rect4"></div>\n  </div>\n';
 
-  var intro = ['Picky-highlight 0.0.3 in debug mode.'];
-  var message = '\nHello, you are running Picky-highlight 0.0.3 in debug mode.\nThis will help you to identify any problems in your application.\n\'debug mode\' is a global option which will disable debug mode for each\ninstance. You can disable it when declaring a new instance. For example,\nnew Highlighter({debug: false});\nFor documentation head to the wiki:\n  https://github.com/danjford/picky-highlight/wiki\nIf you have found any bugs, create an issue for us:\n  https://github.com/danjford/picky-highlight/issues\n';
+  var intro = ['Picky-highlight 0.0.4 in debug mode.'];
+  var message = '\nHello, you are running Picky-highlight 0.0.4 in debug mode.\nThis will help you to identify any problems in your application.\n\'debug mode\' is a global option which will disable debug mode for each\ninstance. You can disable it when declaring a new instance. For example,\nnew Highlighter({debug: false});\nFor documentation head to the wiki:\n  https://github.com/danjford/picky-highlight/wiki\nIf you have found any bugs, create an issue for us:\n  https://github.com/danjford/picky-highlight/issues\n';
 
   /**
    * The welcome function gives a message to the user letting the know

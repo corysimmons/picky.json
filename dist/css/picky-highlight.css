@@ -105,8 +105,11 @@
   height: 15px;
 }
 .picky .parent {
-  padding-left: 10px;
+  padding-left: 20px;
   position: relative;
+}
+.picky .picky-wrap:first-child {
+  margin-left: -8px;
 }
 .picky code:after {
   content: '';
