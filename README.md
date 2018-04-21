@@ -4,8 +4,11 @@
   :mag: Dump JSON. Click something. Get selector. :mag_right:
 </p>
 
+## Chrome Extension
+https://chrome.google.com/webstore/detail/pickyjson/cdbfbhnfamigibakdbmmnihbpjldojgl
+
 ### Usage
-- Go to [pickyjson.com](http://pickyjson.com)
+- Go to [https://corysimmons.github.io/picky.json](https://corysimmons.github.io/picky.json)
 - Input **[valid JSON](http://jsonlint.com/)** or input a URL that returns valid JSON
 - Click anything in the JSON on the right
 - Copy and enjoy the selector
